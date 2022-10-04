@@ -42,7 +42,6 @@ class PageController extends Controller
             'message'=>'Added Successfully'
         ]);
     }
-    // mohammed elabsi
     /**
      * Display the specified resource.
      *
