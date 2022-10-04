@@ -42,7 +42,7 @@ class PageController extends Controller
             'message'=>'Added Successfully'
         ]);
     }
-
+///// 
     /**
      * Display the specified resource.
      *
