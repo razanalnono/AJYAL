@@ -70,20 +70,20 @@ class PageController extends Controller
             'logo' => 'nullable',
         ]);
 
-$page->fill($request->post())->update();
-if($request->hasFile('logo')){
-if($page->logo)
-{
-    $isExist = Storage::disk('public')->exists('logo/image'.$page->logo);
-    if($isExist){
-                Storage::disk('public')->delete('logo/image' . $page->logo);
-    }
-}        
-        $logoName = Str::random() . '.' . $request->logo->getClientOriginalExtension();
-        Storage::disk('public')->putFileAs('logo/image', $request->logo, $logoName);
-    $page->logo=$logoName;
-    $page->save();
-}
+        $page->fill($request->post())->update();
+        if($request->hasFile('logo')){
+        if($page->logo)
+        {
+            $isExist = Storage::disk('public')->exists('logo/image'.$page->logo);
+            if($isExist){
+                        Storage::disk('public')->delete('logo/image' . $page->logo);
+            }
+        }        
+            $logoName = Str::random() . '.' . $request->logo->getClientOriginalExtension();
+            Storage::disk('public')->putFileAs('logo/image', $request->logo, $logoName);
+            $page->logo=$logoName;
+            $page->save();
+        }
         return response()->json([
             'message' => 'Added Successfully'
         ]);
