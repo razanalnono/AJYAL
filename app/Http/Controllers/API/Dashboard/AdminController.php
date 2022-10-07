@@ -12,15 +12,15 @@ class AdminController extends Controller
 {
     //
     public function index(){
-        return Admin::select('firstName','lastName','gender','avatar','email');
+        return Admin::select('firstName','lastName','gender','avatar','email')->get();
     }
 
     public function store(Request $request){
-$data=$request->except('avatar');
-$data['avatar']=$this->uploadImage($request);
+        $data=$request->except('avatar');
+        $data['avatar']=$this->uploadImage($request);
         
         Admin::create($request->post());
-        return Response::json([
+        return response()->json([
             'message'=>'Admin Created'
         ]);
         
