@@ -16,7 +16,7 @@ class InfoController extends Controller
      */
     public function index()
     {
-        $info = Info::paginate();
+        $info = Info::all();
 
         return $info;
     }
