@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use App\Models\Contact;
 use App\Models\Info;
 use App\Models\Program;
+use App\Models\Social;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -34,7 +35,8 @@ class DatabaseSeeder extends Seeder
         //     ]);
 
         // Contact::factory(10)->create();
-        Program::factory(10)->create();
+        // Program::factory(10)->create();
+        Social::factory(1)->create();
 
     }
 }
