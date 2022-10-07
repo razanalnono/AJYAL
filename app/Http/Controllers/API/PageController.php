@@ -6,10 +6,17 @@ use App\Models\page;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Faker\Provider\Lorem;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:sanctum')->except('index');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -33,11 +40,11 @@ class PageController extends Controller
             'bio'=>'required',
             'vision'=>'required',
             'goals'=>'required',
-            'logo'=>'image',
+            'logo'=>'nullable|image',
         ]);
-        $logoName=Str::random().'.'.$request->logo->getClientOriginalExtension();
-        Storage::disk('public')->putFileAs('logo/image',$request->logo,$logoName);
-        page::create($request->post()+['logo'=>$logoName]);
+        // $logoName=Str::random().'.'.$request->logo->getClientOriginalExtension();
+        // Storage::disk('public')->putFileAs('logo/image',$request->logo,$logoName);
+        page::create($request->post());
         return response()->json([
             'message'=>'Added Successfully'
         ]);
@@ -65,28 +72,31 @@ class PageController extends Controller
     {
         //
         $request->validate([
-            'bio' => 'required',
-            'vision' => 'required',
-            'goals' => 'required',
-            'logo' => 'nullable',
+            'bio' => 'sometimes|required',
+            'vision' => 'sometimes|required',
+            'goals' => 'sometimes|required',
+            'logo' => 'sometimes|nullable',
         ]);
 
-$page->fill($request->post())->update();
-if($request->hasFile('logo')){
-if($page->logo)
-{
-    $isExist = Storage::disk('public')->exists('logo/image'.$page->logo);
-    if($isExist){
-                Storage::disk('public')->delete('logo/image' . $page->logo);
-    }
-}        
-        $logoName = Str::random() . '.' . $request->logo->getClientOriginalExtension();
-        Storage::disk('public')->putFileAs('logo/image', $request->logo, $logoName);
-    $page->logo=$logoName;
-    $page->save();
-}
+// $page->fill($request->post())->update();
+// if($request->hasFile('logo')){
+// if($page->logo)
+// {
+//     $isExist = Storage::disk('public')->exists('logo/image'.$page->logo);
+//     if($isExist){
+//                 Storage::disk('public')->delete('logo/image' . $page->logo);
+//     }
+// }        
+//         $logoName = Str::random() . '.' . $request->logo->getClientOriginalExtension();
+//         Storage::disk('public')->putFileAs('logo/image', $request->logo, $logoName);
+//     $page->logo=$logoName;
+//     $page->save();
+// }
+// $page->save();
+
+$page->update($request->all());
         return response()->json([
-            'message' => 'Added Successfully'
+            'message' => 'Updated Successfully'
         ]);
     }
 
@@ -99,12 +109,12 @@ if($page->logo)
     public function destroy(page $page)
     {
 
-        if ($page->logo) {
-            $isExist = Storage::disk('public')->exists('logo/image' . $page->logo);
-            if ($isExist) {
-                Storage::disk('public')->delete('logo/image'.$page->logo);
-            }
-        } 
+        // if ($page->logo) {
+        //     $isExist = Storage::disk('public')->exists('logo/image' . $page->logo);
+        //     if ($isExist) {
+        //         Storage::disk('public')->delete('logo/image'.$page->logo);
+        //     }
+        // } 
         $page->delete();
         return response()->json([
             'message'=>'Deleted Successfully'
