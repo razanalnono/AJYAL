@@ -1,8 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\PageController;
-use App\Models\page;
+use App\Http\Controllers\API\InfoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('/page', PageController::class);
 Route::apiResource('/contact', ContactController::class);
+Route::apiResource('/info', InfoController::class);

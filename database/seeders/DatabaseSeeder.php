@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Contact;
+use App\Models\Info;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,7 +24,15 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        Contact::factory(10)->create();
+        Info::factory()->create([
+                'email' => 'ajyal@gmail.com',
+                'mobile' => '0599455777',
+                'telephone' => '08556465',
+                'address' => 'تل الهوا بالقرب من كيرفور',
+                'fax' => 'لايوجد فاكس',
+            ]);
+
+        // Contact::factory(10)->create();
 
     }
 }
