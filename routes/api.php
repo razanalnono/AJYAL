@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\Auth\AccessTokensController;
+use App\Http\Controllers\API\Dashboard\AdminController;
+use App\Http\Controllers\API\Dashboard\TraineeController;
+use App\Http\Controllers\API\Dashboard\TrainerController;
 use App\Http\Controllers\API\PageController;
+use App\Models\Admin;
 use App\Models\page;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,8 +20,21 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::apiResource('/page',PageController::class);
+ Route::apiResource('/page',PageController::class);
+
+
+Route::post('/login',[AccessTokensController::class,'store']);
+Route::post('/verify',[AccessTokensController::class,'verify']);
+// Route::prefix('/dashboard')->function({
+//    Route::apiResource('/admin',AdminController::class); 
+// });
+
+Route::group(['prefix' => '/dashboard'], function () {
+      Route::apiResource('/admin',AdminController::class); 
+      Route::apiResource('/trainee',TraineeController::class);
+      Route::apiResource('/trainer',TrainerController::class);
+});
