@@ -4,6 +4,8 @@ namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Mail\ActivationCode;
+use App\Models\Admin;
+use App\Models\Trainee;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -14,8 +16,11 @@ use Nette\Utils\Random;
 class AccessTokensController extends Controller
 {
     //
+    
     public function store(Request $request){
-
+        
+        
+                
         $request->validate([
             'email' => 'required|email',
             // 'password' => 'required|string|min:6',
@@ -24,28 +29,56 @@ class AccessTokensController extends Controller
 
         $email=$request->email;
         //return obj user 
-        if($user=User::where('email',$email)->first()){
+        
+        if($admin=Admin::where('email',$email)->first()){
             $activation_code=Random::generate('5');
-            $token=$user->createToken('user'. $user->id)->plainTextToken;
-            $user->activation_code = $activation_code;
-            $user->token=$token;
-            $user->save();
-            Mail::to($user->email)->send(new ActivationCode($activation_code));   
+            $token=$admin->createToken('admin'. $admin->id)->plainTextToken;
+            $admin->activation_code = $activation_code;
+            $admin->token=$token;
+            $admin->save();
+            Mail::to($admin->email)->send(new ActivationCode($activation_code));   
             
 
             return Response::json([
                 'status'=>403,
-                'message'=>'verify your code',
-                'data' => $user,
+                'message'=>'verify your code ya admin',
+                'data' => $admin,
             ]);
             
-           }else{
+        //    }if(auth()->check()) {
+        //     if (auth()->user() instanceof Trainee) {
+                
+        // $request->validate([
+        //     'email' => 'required|email',
+        //     // 'password' => 'required|string|min:6',
+        //     //'agent' => 'string'
+        // ]);
+
+        // $email=$request->email;
+        // //return obj user 
+         }elseif($trainee=Trainee::where('email',$email)->first()){
+            $activation_code=Random::generate('5');
+            $token=$trainee->createToken('trainee'. $trainee->id)->plainTextToken;
+            $trainee->activation_code = $activation_code;
+            $trainee->token=$token;
+            $trainee->save();
+            Mail::to($trainee->email)->send(new ActivationCode($activation_code));   
+            
+
+            return Response::json([
+                'status'=>403,
+                'message'=>'verify your code ya trainee',
+                'data' => $trainee,
+            ]);
+            
+           }
+ else{
             return Response::json([
                 'message'=>'not authenticated',
             ]);
         }
         
-
+    }
         // $user=User::where('email',$request->email)->first();
         
         // if($user && Hash::check($request->password,$user->password)){
@@ -63,8 +96,8 @@ class AccessTokensController extends Controller
         // return Response::json([
         //     'message'=>'Invalid Login Credentials'
         // ]);
-    }
-
+    // }
+    
 
 // public function verify(Request $request){
     
@@ -94,17 +127,36 @@ public function verify(Request $request){
     $email =$request->email;
     $acode = $request->activation_code;
 
-    if($user=User::where('email',$email)->where('activation_code',$acode)->first()){
-                $user->status == 1;
-                $new_token = $user->createToken('verify' . $user->id)->plainTextToken;
-                $user->token=$new_token;
-                $user->save();
+    if($admin=Admin::where('email',$email)->where('activation_code',$acode)->first()){
+                $admin->status == 1;
+                $new_token = $admin->createToken('verify' . $admin->id)->plainTextToken;
+                $admin->token=$new_token;
+                $admin->save();
                 return Response::json([
                    //     'token' => $new_token->plainTextToken,
-                        'user' => $user,
+                        'admin' => $admin,
                         'meassage'=>'Verified',
                     ]);
-        } else {
+        }elseif($trainee=Trainee::where('email',$email)->where('activation_code',$acode)->first()){
+                $trainee->status == 1;
+                $new_token = $trainee->createToken('verify' . $trainee->id)->plainTextToken;
+                $trainee->token=$new_token;
+                $trainee->save();
+                return Response::json([
+                   //     'token' => $new_token->plainTextToken,
+                        'trainee' => $trainee,
+                        'meassage'=>'Verified',
+                    ]);} elseif ($trainer = Admin::where('email', $email)->where('activation_code', $acode)->first()) {
+            $trainer->status == 1;
+            $new_token = $trainer->createToken('verify' . $trainer->id)->plainTextToken;
+            $trainer->token = $new_token;
+            $trainer->save();
+            return Response::json([
+                //     'token' => $new_token->plainTextToken,
+                'trainer' => $trainer,
+                'meassage' => 'Verified',
+            ]);}
+         else{
             return Response::json([
                 'message' => 'Not verified'
             ]);
