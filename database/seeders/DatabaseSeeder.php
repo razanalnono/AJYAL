@@ -3,6 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Contact;
+use App\Models\Info;
+use App\Models\Program;
+use App\Models\Social;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,5 +25,18 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        // Info::factory()->create([
+        //         'email' => 'ajyal@gmail.com',
+        //         'mobile' => '0599455777',
+        //         'telephone' => '08556465',
+        //         'address' => 'تل الهوا بالقرب من كيرفور',
+        //         'fax' => 'لايوجد فاكس',
+        //     ]);
+
+        // Contact::factory(10)->create();
+        // Program::factory(10)->create();
+        Social::factory(1)->create();
+
     }
 }
