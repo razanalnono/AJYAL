@@ -40,7 +40,7 @@ class DatabaseSeeder extends Seeder
         // Program::factory(10)->create();
         // Social::factory(1)->create();
         // Project::factory(10)->create();
-        Group::factory(30)->create();
+        // Group::factory(30)->create();
 
     }
 }
