@@ -28,8 +28,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
- Route::apiResource('/page',PageController::class);
-
 
 // Route::post('/login',[AccessTokensController::class,'store']);
 // Route::post('/verify',[AccessTokensController::class,'verify']);
