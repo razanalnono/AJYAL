@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\API\Dashboard;
 
 use App\Models\Trainer;
+use Nette\Utils\Random;
+use App\Mail\ActivationCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class TrainerController extends Controller
@@ -22,14 +26,27 @@ class TrainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,Trainer $trainer)
     {
         //
 
+        $email = $request->email;
+        $trainer = Trainer::where('email', $email)->first();
+
+        $password = Random::generate('5');
+
+        // $hashed = Hash::make($password);
+        // $trainee->password = $hashed;
+
+
         $data = $request->except('avatar');
+        $data['password'] = Hash::make($password);
+
         $data['avatar'] = $this->uploadImage($request);
 
-        Trainer::create($request->post());
+        $trainer = Trainer::create($data);
+        Mail::to($trainer->email)->send(new ActivationCode($password));
+
         return response()->json([
             'message' => 'Trainer Created'
         ]);

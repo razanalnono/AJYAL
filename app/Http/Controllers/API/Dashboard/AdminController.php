@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
-use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use Nette\Utils\Random;
+use App\Mail\ActivationCode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class AdminController extends Controller
 {
@@ -15,20 +19,36 @@ class AdminController extends Controller
         return Admin::select('firstName','lastName','gender','avatar','email')->get();
     }
 
-    public function store(Request $request){
-        $data=$request->except('avatar');
-        $data['avatar']=$this->uploadImage($request);
+    public function store(Request $request,Admin $admin){
         
-        Admin::create($request->post());
+        $email = $request->email;
+        $admin = Admin::where('email', $email)->first();
+
+        $password = Random::generate('5');
+        
+
+        // $hashed = Hash::make($password);
+        // $trainee->password = $hashed;
+
+
+        $data = $request->except('avatar');
+        $data['password'] = Hash::make($password);
+
+        $data['avatar'] = $this->uploadImage($request);
+
+        $trainee = Admin::create($data);
+        Mail::to($admin->email)->send(new ActivationCode($password));
+
+
         return response()->json([
-            'message'=>'Admin Created'
+            'message' => 'Admin Created'
         ]);
         
     }
 
     public function show($id){
     }
-    
+
     public function update(Request $request,Admin $admin){
         $old_image=$admin->avatar;
         $data = $request->except('avatar');
@@ -36,13 +56,13 @@ class AdminController extends Controller
         if($new_image){
             $data['avatar']=$new_image;
         }
-        
+
         $admin->update($data);
-        
+
         if($old_image && $new_image){
             Storage::disk('public')->delete($old_image);
         }
-        
+
         return response()->json([
             'message' => 'Updated Successfully'
         ]);
@@ -61,11 +81,11 @@ class AdminController extends Controller
 
     protected function uploadImage(Request $request)
     {
-        if (!$request->hasFile('image')) {
+        if (!$request->hasFile('avatar')) {
             return;
         }
 
-        $file = $request->file('image'); // UploadedFile Object
+        $file = $request->file('avatar'); // UploadedFile Object
 
         $path = $file->store('uploads', [
             'disk' => 'public'
