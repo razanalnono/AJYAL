@@ -49,7 +49,6 @@ class PageController extends Controller
             'message'=>'Added Successfully'
         ]);
     }
-
     /**
      * Display the specified resource.
      *
@@ -78,6 +77,7 @@ class PageController extends Controller
             'logo' => 'sometimes|nullable',
         ]);
 
+
 // $page->fill($request->post())->update();
 // if($request->hasFile('logo')){
 // if($page->logo)
@@ -95,6 +95,8 @@ class PageController extends Controller
 // $page->save();
 
 $page->update($request->all());
+
+
         return response()->json([
             'message' => 'Updated Successfully'
         ]);
