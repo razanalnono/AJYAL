@@ -5,8 +5,11 @@ use App\Http\Controllers\API\Dashboard\AdminController;
 use App\Http\Controllers\API\Dashboard\TraineeController;
 use App\Http\Controllers\API\Dashboard\TrainerController;
 use App\Http\Controllers\API\ContactController;
+use App\Http\Controllers\API\Dashboard\GroupsController;
+use App\Http\Controllers\API\Dashboard\ProjectsController;
 use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\InfoController;
+use App\Http\Controllers\API\OurworkController;
 use App\Http\Controllers\API\ProgramsController;
 use App\Http\Controllers\API\SocialController;
 use Illuminate\Support\Facades\Route;
@@ -47,4 +50,8 @@ Route::apiResource('/programs', ProgramsController::class);
 Route::post('/programs/{program}', [ProgramsController::class, 'update']);
 Route::apiResource('/social', SocialController::class);
 Route::post('/social/{social}', [SocialController::class, 'update']);
+Route::apiResource('/ourwork', OurworkController::class);
+Route::apiResource('/projects', ProjectsController::class);
+Route::apiResource('/groups', GroupsController::class);
+
 

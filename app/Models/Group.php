@@ -9,7 +9,9 @@ class Group extends Model
 {
     use HasFactory;
 
-    protected $fillable=['name'];
+    protected $fillable=[
+        'name', 'project_id'
+    ];
     
     public function project(){
         return $this->belongsTo(Project::class, 'project_id', 'id');
@@ -21,7 +23,7 @@ class Group extends Model
     }
 
     public function trainee(){
-                return $this->belongsToMany(Group::class,'group_trainee','trainee_id','group_id','id','id');
+        return $this->belongsToMany(Group::class,'group_trainee','trainee_id','group_id','id','id');
 
     }
     public function achievements()

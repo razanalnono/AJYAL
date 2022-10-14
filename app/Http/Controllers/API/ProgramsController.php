@@ -34,7 +34,7 @@ class ProgramsController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
             'image' => ['required', 'image', 'max:1048576', 'dimensions:min_width=100,min_height=100'],
-            'start_ad' => ['nullable', 'before:end_date'],
+            'start_ad' => ['nullable', 'before:end_ad'],
             'end_ad' => ['nullable'],
         ]);
 
@@ -68,7 +68,7 @@ class ProgramsController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:255'],
             'image' => ['image', 'max:1048576', 'dimensions:min_width=100,min_height=100'],
-            'start_ad' => ['nullable', 'before:end_date'],
+            'start_ad' => ['nullable', 'before:end_ad'],
             'end_ad' => ['nullable'],
         ]);
         $program = Program::findOrFail($id);
