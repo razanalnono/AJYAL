@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Trainee extends Model
 {
-    use HasFactory;
+    use HasFactory,HasApiTokens;
     protected $fillable = [
         'firstName', 'lastName',
         'nationalID', 'gender',
@@ -25,6 +26,11 @@ class Trainee extends Model
 
     public function achievements(){
         return $this->hasMany(Achievements::class,'trainee_id','id');
+    }
+
+    public function setfullNameAttribute()
+    {
+        return ($this->firstName) . ' ' . ($this->lastName);
     }
 
     

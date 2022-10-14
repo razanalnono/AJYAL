@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
 
 class Trainer extends Model
 {
-    use HasFactory;
+    use HasFactory,HasApiTokens;
     protected $fillable = [
         'firstName', 'lastName',
         'nationalID', 'gender',
@@ -15,6 +16,17 @@ class Trainer extends Model
         'email', 'password',
         'salary'
     ];
+    protected $appends = ['full_name']; 
+
+
+    public function course(){
+        $this->hasOne(Course::class,'trainer_id','id');
+    }
+    
+    public function getfullNameAttribute()
+    {
+        return ($this->firstName) . ' ' . ($this->lastName);
+    }
 
    
 }

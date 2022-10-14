@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\page;
+use App\Models\Page;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,7 +25,7 @@ class PageController extends Controller
     public function index()
     {
         //
-        return page::select('bio','vision','goals','logo')->get();
+        return Page::select('bio','vision','goals','logo')->get();
     }
 
     /**
@@ -44,7 +44,7 @@ class PageController extends Controller
         ]);
         // $logoName=Str::random().'.'.$request->logo->getClientOriginalExtension();
         // Storage::disk('public')->putFileAs('logo/image',$request->logo,$logoName);
-        page::create($request->post());
+        Page::create($request->post());
         return response()->json([
             'message'=>'Added Successfully'
         ]);
@@ -68,7 +68,7 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, page $page)
+    public function update(Request $request, Page $page)
     {
         //
         $request->validate([
@@ -106,7 +106,7 @@ $page->update($request->all());
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(page $page)
+    public function destroy(Page $page)
     {
 
         // if ($page->logo) {

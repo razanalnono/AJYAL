@@ -21,6 +21,9 @@ class Admin extends Model
         'email','password',
     ];
 
-
+    public function setfullNameAttribute()
+    {
+        return ($this->firstName) . ' ' . ($this->lastName);
+    }
  
 }
