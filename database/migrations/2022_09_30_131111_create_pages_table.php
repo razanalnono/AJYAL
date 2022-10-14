@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('bio');
             $table->text('goals');
             $table->text('vision');
-            $table->string('logo');
+            $table->string('logo')->nullable();
             $table->timestamps();
         });
     }

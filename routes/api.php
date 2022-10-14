@@ -27,10 +27,6 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-
- Route::apiResource('/page',PageController::class);
-
-
 // Route::post('/login',[AccessTokensController::class,'store']);
 // Route::post('/verify',[AccessTokensController::class,'verify']);
 // Route::prefix('/dashboard')->function({
@@ -53,3 +49,4 @@ Route::post('/social/{social}', [SocialController::class, 'update']);
 Route::apiResource('/ourwork', OurworkController::class);
 Route::apiResource('/projects', ProjectsController::class);
 Route::apiResource('/groups', GroupsController::class);
+
