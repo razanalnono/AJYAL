@@ -26,6 +26,9 @@ class Admin extends User
         'email','password',
     ];
 
-
+    public function setfullNameAttribute()
+    {
+        return ($this->firstName) . ' ' . ($this->lastName);
+    }
  
 }

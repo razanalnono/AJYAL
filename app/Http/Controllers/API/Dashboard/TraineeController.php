@@ -5,7 +5,11 @@ namespace App\Http\Controllers\API\Dashboard;
 use App\Models\Trainee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\ActivationCode;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Nette\Utils\Random;
 
 class TraineeController extends Controller
 {
@@ -22,16 +26,28 @@ class TraineeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Trainee $trainee)
     {
         //
+        $email = $request->email;
+        $trainee = Trainee::where('email', $email)->first();
+
+        $password = Random::generate('5');
+
+        // $hashed = Hash::make($password);
+        // $trainee->password = $hashed;
+
 
         $data = $request->except('avatar');
+        $data['password'] = Hash::make($password);
+
         $data['avatar'] = $this->uploadImage($request);
 
-        Trainee::create($request->post());
+        $trainee=Trainee::create($data);
+        Mail::to($trainee->email)->send(new ActivationCode($password));
+
         return response()->json([
-            'message' => 'trainee Created'
+            'message' => 'Trainee Created'
         ]);
     }
 

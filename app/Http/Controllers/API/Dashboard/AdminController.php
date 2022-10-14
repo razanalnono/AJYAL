@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
-use App\Http\Controllers\Controller;
 use App\Models\Admin;
+use Nette\Utils\Random;
+use App\Mail\ActivationCode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class AdminController extends Controller
 {
@@ -15,14 +19,29 @@ class AdminController extends Controller
         return Admin::select('firstName','lastName','gender','avatar','email')->get();
     }
 
-    public function store(Request $request){
+    public function store(Request $request,Admin $admin){
+        
+        $email = $request->email;
+        $admin = Admin::where('email', $email)->first();
 
-        $data=$request->except('avatar');
-        $data['avatar']=$this->uploadImage($request);
+        $password = Random::generate('5');
+        
 
-        Admin::create($request->post());
+        // $hashed = Hash::make($password);
+        // $trainee->password = $hashed;
+
+
+        $data = $request->except('avatar');
+        $data['password'] = Hash::make($password);
+
+        $data['avatar'] = $this->uploadImage($request);
+
+        $trainee = Admin::create($data);
+        Mail::to($admin->email)->send(new ActivationCode($password));
+
+
         return response()->json([
-            'message'=>'Admin Created'
+            'message' => 'Admin Created'
         ]);
         
     }

@@ -8,6 +8,6 @@
 </head>
 <body>
     <h3>ِActivation code</h3>
-<p> {{ $activation_code }}</p>
+<p> {{ $password }}</p>
 </body>
 </html>

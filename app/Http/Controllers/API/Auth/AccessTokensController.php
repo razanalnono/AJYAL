@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Mail\ActivationCode;
 use App\Models\Admin;
 use App\Models\Trainee;
+use App\Models\Trainer;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,11 +18,8 @@ use Nette\Utils\Random;
 class AccessTokensController extends Controller
 {
     //
-    
-    public function store(Request $request){
-        
-        
-                
+    public function login(Request $request){
+
         $request->validate([
             'email' => 'required|email',
             // 'password' => 'required|string|min:6',
@@ -28,19 +27,32 @@ class AccessTokensController extends Controller
         ]);
 
         $email=$request->email;
-        //return obj user 
+        $password=$request->password;
         
-        if($admin=Admin::where('email',$email)->first()){
-            $activation_code=Random::generate('5');
-            $token=$admin->createToken('admin'. $admin->id)->plainTextToken;
-            $admin->activation_code = $activation_code;
-            $admin->token=$token;
-            $admin->save();
-            Mail::to($admin->email)->send(new ActivationCode($activation_code));   
+        //return obj user 
+        if($trainee=Trainee::where('email',$email)->first()){
+            Hash::check('password', $trainee->password);
+            $token=$trainee->createToken('user'. $trainee->id)->plainTextToken;
+            $trainee->token=$token;
+            $trainee->save();
+
             
 
             return Response::json([
                 'status'=>403,
+                'message'=>'Password Has been sent to your email',
+                'data' => $trainee,
+            ]);
+            
+           }
+      elseif ($trainer = Trainer::where('email', $email)->first()) {
+            Hash::check('password', $trainer->password);
+            $token = $trainer->createToken('trainer' . $trainer->id)->plainTextToken;
+            $trainer->token = $token;
+            $trainer->save();
+
+
+=======
                 'message'=>'verify your code ya admin',
                 'data' => $admin,
             ]);
@@ -73,9 +85,26 @@ class AccessTokensController extends Controller
             
            }
  else{
+
+        }elseif($admin = Admin::where('email', $email)->first()) {
+            Hash::check('password', $admin->password);
+            $token = $admin->createToken('user' . $admin->id)->plainTextToken;
+            $admin->token = $token;
+            $admin->save();
+
+
             return Response::json([
-                'message'=>'not authenticated',
+                'status' => 403,
+                'message' => 'Password Has been sent to your email',
+                'data' => $admin,
             ]);
+        }else{
+            return Response::json([
+                'status' => 404,
+                'message' => 'Error Credentials',
+            ]);
+
+        }
         }
         
     }

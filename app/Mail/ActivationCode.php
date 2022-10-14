@@ -16,10 +16,10 @@ class ActivationCode extends Mailable
      *
      * @return void
      */
-    public function __construct($activation_code)
+    public function __construct($password)
     {
         //
-        $this->activation_code=$activation_code;
+        $this->password=$password;
     }
 
     /**
@@ -29,6 +29,6 @@ class ActivationCode extends Mailable
      */
     public function build()
     {
-return $this->markdown('emails.activate')->with(['activation_code'=>$this->activation_code]);
+return $this->markdown('emails.activate')->with(['password'=>$this->password]);
     }
 }
