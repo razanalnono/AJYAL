@@ -39,6 +39,7 @@ class AdminController extends Controller
         $trainee = Admin::create($data);
         Mail::to($admin->email)->send(new ActivationCode($password));
 
+
         return response()->json([
             'message' => 'Admin Created'
         ]);
@@ -47,7 +48,7 @@ class AdminController extends Controller
 
     public function show($id){
     }
-    
+
     public function update(Request $request,Admin $admin){
         $old_image=$admin->avatar;
         $data = $request->except('avatar');
@@ -55,13 +56,13 @@ class AdminController extends Controller
         if($new_image){
             $data['avatar']=$new_image;
         }
-        
+
         $admin->update($data);
-        
+
         if($old_image && $new_image){
             Storage::disk('public')->delete($old_image);
         }
-        
+
         return response()->json([
             'message' => 'Updated Successfully'
         ]);
@@ -80,11 +81,11 @@ class AdminController extends Controller
 
     protected function uploadImage(Request $request)
     {
-        if (!$request->hasFile('image')) {
+        if (!$request->hasFile('avatar')) {
             return;
         }
 
-        $file = $request->file('image'); // UploadedFile Object
+        $file = $request->file('avatar'); // UploadedFile Object
 
         $path = $file->store('uploads', [
             'disk' => 'public'

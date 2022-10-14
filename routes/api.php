@@ -5,10 +5,11 @@ use App\Http\Controllers\API\Dashboard\AdminController;
 use App\Http\Controllers\API\Dashboard\CourseController;
 use App\Http\Controllers\API\Dashboard\TraineeController;
 use App\Http\Controllers\API\Dashboard\TrainerController;
+use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\PageController;
-use App\Models\Admin;
-use App\Models\page;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\InfoController;
+use App\Http\Controllers\API\ProgramsController;
+use App\Http\Controllers\API\SocialController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
- Route::apiResource('/page',PageController::class);
+Route::apiResource('/page', PageController::class);
 
 
 Route::post('/login',[AccessTokensController::class,'login']);
@@ -40,3 +41,24 @@ Route::group(['prefix' => '/dashboard'], function () {
       Route::apiResource('/trainer',TrainerController::class);
 });
 Route::apiResource('courses',CourseController::class);
+Route::post('/verify', [AccessTokensController::class, 'verify']);
+
+Route::post('/login', [AccessTokensController::class, 'store']);
+Route::post('/verify', [AccessTokensController::class, 'verify']);
+
+Route::group(['prefix' => '/dashboard'], function () {
+    Route::apiResource('/admin', AdminController::class);
+    Route::apiResource('/trainee', TraineeController::class);
+    Route::apiResource('/trainer', TrainerController::class);
+});
+Route::apiResource('/page', PageController::class);
+Route::apiResource('/contact', ContactController::class);
+Route::apiResource('/info', InfoController::class);
+Route::apiResource('/programs', ProgramsController::class);
+Route::apiResource('/social', SocialController::class);
+
+Route::group(['prefix' => '/dashboard'], function () {
+    Route::apiResource('/admin', AdminController::class);
+    Route::apiResource('/trainee', TraineeController::class);
+    Route::apiResource('/trainer', TrainerController::class);
+});
