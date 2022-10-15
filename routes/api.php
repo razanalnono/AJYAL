@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Dashboard\AdminController;
 use App\Http\Controllers\API\Dashboard\TraineeController;
 use App\Http\Controllers\API\Dashboard\TrainerController;
 use App\Http\Controllers\API\ContactController;
+use App\Http\Controllers\API\Dashboard\AchievementsController;
 use App\Http\Controllers\API\Dashboard\GroupsController;
 use App\Http\Controllers\API\Dashboard\ProjectsController;
 use App\Http\Controllers\API\PageController;
@@ -51,5 +52,6 @@ Route::post('/social/{social}', [SocialController::class, 'update']);
 Route::apiResource('/ourwork', OurworkController::class);
 Route::apiResource('/projects', ProjectsController::class);
 Route::apiResource('/groups', GroupsController::class);
+Route::apiResource('/achievements', AchievementsController::class);
 
 
