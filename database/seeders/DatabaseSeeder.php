@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Achievements;
 use App\Models\Contact;
 use App\Models\Group;
 use App\Models\Info;
@@ -41,6 +42,7 @@ class DatabaseSeeder extends Seeder
         // Social::factory(1)->create();
         // Project::factory(10)->create();
         // Group::factory(30)->create();
+        Achievements::factory(16)->create();
 
     }
 }
