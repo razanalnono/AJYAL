@@ -29,6 +29,13 @@ class TraineeController extends Controller
     public function store(Request $request, Trainee $trainee)
     {
         //
+        $request->validate([
+            'email' => 'required',
+            'firstName' => 'required',
+            'lastName' => 'required',
+            'gender' => ''
+        ]);
+
         $email = $request->email;
         $trainee = Trainee::where('email', $email)->first();
 
@@ -43,7 +50,7 @@ class TraineeController extends Controller
 
         $data['avatar'] = $this->uploadImage($request);
 
-        $trainee=Trainee::create($data);
+        $trainee = Trainee::create($data);
         Mail::to($trainee->email)->send(new ActivationCode($password));
 
         return response()->json([

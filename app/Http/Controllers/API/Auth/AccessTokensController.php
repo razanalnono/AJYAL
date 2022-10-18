@@ -17,7 +17,7 @@ use Nette\Utils\Random;
 class AccessTokensController extends Controller
 {
     //
-    public function login(Request $request){
+    public function login(Request $request, $type){
 
         $request->validate([
             'email' => 'required|email',
@@ -28,52 +28,69 @@ class AccessTokensController extends Controller
         $email=$request->email;
         $password=$request->password;
         
-        //return obj user 
-        if($trainee=Trainee::where('email',$email)->first()){
-            Hash::check('password', $trainee->password);
-            $token=$trainee->createToken('user'. $trainee->id)->plainTextToken;
-            $trainee->token=$token;
-            $trainee->save();
+        if($type='trainee'){
+            $user = Trainee::where('email', $email)->first();
             
-
-            return Response::json([
-                'status'=>403,
-                'message'=>'Password Has been sent to your email',
-                'data' => $trainee,
-            ]);
-            
-           }
-      elseif ($trainer = Trainer::where('email', $email)->first()) {
-            Hash::check('password', $trainer->password);
-            $token = $trainer->createToken('trainer' . $trainer->id)->plainTextToken;
-            $trainer->token = $token;
-            $trainer->save();
-
-
-            return Response::json([
-                'status' => 403,
-                'message' => 'Password Has been sent to your email',
-                'data' => $trainer,
-            ]);
-        }elseif($admin = Admin::where('email', $email)->first()) {
-            Hash::check('password', $admin->password);
-            $token = $admin->createToken('user' . $admin->id)->plainTextToken;
-            $admin->token = $token;
-            $admin->save();
-
-
-            return Response::json([
-                'status' => 403,
-                'message' => 'Password Has been sent to your email',
-                'data' => $admin,
-            ]);
-        }else{
-            return Response::json([
-                'status' => 404,
-                'message' => 'Error Credentials',
-            ]);
+        }elseif($type='trainer'){
+            $user = Trainer::where('email', $email)->first();
 
         }
+            else{
+            $user = Admin::where('email', $email)->first();
+
+        }
+       if($user && Hash::check('password', $user->password)){
+        $token = $user->createToken($request->user())->plainTextToken;
+     return response()->json([
+        'message'=>'Authenticated'
+     ]);
+       }
+        //return obj user 
+    //     if($trainee=Trainee::where('email',$email)->first()){
+    //         Hash::check('password', $trainee->password);
+    //         $token=$trainee->createToken('user'. $trainee->id)->plainTextToken;
+    //         $trainee->token=$token;
+    //         $trainee->save();
+            
+
+    //         return Response::json([
+    //             'status'=>403,
+    //             'message'=>'Password Has been sent to your email',
+    //             'data' => $trainee,
+    //         ]);
+            
+    //        }
+    //   elseif ($trainer = Trainer::where('email', $email)->first()) {
+    //         Hash::check('password', $trainer->password);
+    //         $token = $trainer->createToken('trainer' . $trainer->id)->plainTextToken;
+    //         $trainer->token = $token;
+    //         $trainer->save();
+
+
+    //         return Response::json([
+    //             'status' => 403,
+    //             'message' => 'Password Has been sent to your email',
+    //             'data' => $trainer,
+    //         ]);
+    //     }elseif($admin = Admin::where('email', $email)->first()) {
+    //         Hash::check('password', $admin->password);
+    //         $token = $admin->createToken('user' . $admin->id)->plainTextToken;
+    //         $admin->token = $token;
+    //         $admin->save();
+
+
+    //         return Response::json([
+    //             'status' => 403,
+    //             'message' => 'Password Has been sent to your email',
+    //             'data' => $admin,
+    //         ]);
+    //     }else{
+    //         return Response::json([
+    //             'status' => 404,
+    //             'message' => 'Error Credentials',
+    //         ]);
+
+    //     }
         // $user=User::where('email',$request->email)->first();
         
         // if($user && Hash::check($request->password,$user->password)){

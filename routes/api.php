@@ -6,6 +6,8 @@ use App\Http\Controllers\API\Dashboard\CourseController;
 use App\Http\Controllers\API\Dashboard\TraineeController;
 use App\Http\Controllers\API\Dashboard\TrainerController;
 use App\Http\Controllers\API\PageController;
+use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\NewsController;
 use App\Models\Admin;
 use App\Models\page;
 use Illuminate\Http\Request;
@@ -28,7 +30,7 @@ use Illuminate\Support\Facades\Route;
  Route::apiResource('/page',PageController::class);
 
 
-Route::post('/login',[AccessTokensController::class,'login']);
+Route::post('/login/{type}',[AccessTokensController::class,'login']);
 Route::post('/verify',[AccessTokensController::class,'verify']);
 // Route::prefix('/dashboard')->function({
 //    Route::apiResource('/admin',AdminController::class); 
@@ -40,3 +42,8 @@ Route::group(['prefix' => '/dashboard'], function () {
       Route::apiResource('/trainer',TrainerController::class);
 });
 Route::apiResource('courses',CourseController::class);
+
+Route::post('/images',[NewsController::class,'store']);
+Route::post('/images/{news}', [NewsController::class, 'update']);
+
+Route::get('/news',[NewsController::class,'index']);
