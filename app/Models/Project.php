@@ -13,8 +13,7 @@ class Project extends Model
         'name', 'financier',
     ];
      
-    public function group(){
+    public function groups(){
         return $this->hasMany(Group::class, 'project_id', 'id');
-
     }
 }
