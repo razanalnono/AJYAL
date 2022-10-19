@@ -11,7 +11,7 @@ class Images extends Model
     protected $fillable=['images','reference_type','reference_id'];
 
     
-    public function iamges(){
+    public function images(){
         return $this->morphTo();
     }
     

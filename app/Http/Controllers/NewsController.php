@@ -26,7 +26,7 @@ class NewsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-   public function store(Request $request, News $news)
+    public function store(Request $request, News $news)
     {
         //
         $request->validate([
@@ -37,21 +37,17 @@ class NewsController extends Controller
         $data =  $request->except('images');
         $news = News::create($data);
 
-            //return $request;
+        foreach ($request->images as $image) {
+            $data = [];
+            $data['images'] = $this->uploadImage($image);
 
-        if($request->images){
-            foreach($request->images as $image) {
-                $data = [];
-                $data['images'] = $this->uploadImage($image);
+            $data['reference_id'] = $news->id;
+            $data['reference_type'] = $news->getMorphClass();
 
-                $data['reference_id'] = $news->id;
-                $data['reference_type'] = $news->getMorphClass();
-
-                Images::create($data);
-            }
-
-        return $request;
+            Images::create($data);
         }
+
+
         return response()->json([
             'message' => 'News Added Successfully'
         ]);
@@ -89,27 +85,37 @@ class NewsController extends Controller
         $data =  $request->except('images');
         $news->update($data);
 
-
-
         $old_image = $news->images;
         $data = $request->except('images');
-        $new_image = $this->uploadImage($request);
+        // $new_image = $this->uploadImage($request);
+
         foreach ($news->images as $img) {
             $img->delete();
         }
-        if ($new_image) {
+
+        foreach ($request->images as $image) {
             $data = [];
-            $data['images'] = $new_image;
+            $data['images'] = $this->uploadImage($image);
 
             $data['reference_id'] = $news->id;
             $data['reference_type'] = $news->getMorphClass();
 
-            if ($old_image && $new_image) {
-                Storage::disk('public')->delete($old_image);
-            }
-
             Images::create($data);
         }
+
+        // if ($new_image) {
+        //     $data = [];
+        //     $data['images'] = $new_image;
+
+        //     $data['reference_id'] = $news->id;
+        //     $data['reference_type'] = $news->getMorphClass();
+
+        //     if ($old_image && $new_image) {
+        //         Storage::disk('public')->delete($old_image);
+        //     }
+
+        //     Images::create($data);
+        // }
 
 
         return response()->json([
@@ -141,7 +147,7 @@ class NewsController extends Controller
         return $path;
     }
 
-    
+
     // protected function uploadImage(Request $request)
     // {
     //     if (!$request->hasFile('images')) {
