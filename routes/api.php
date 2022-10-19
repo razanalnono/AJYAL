@@ -6,11 +6,8 @@ use App\Http\Controllers\API\Dashboard\CourseController;
 use App\Http\Controllers\API\Dashboard\TraineeController;
 use App\Http\Controllers\API\Dashboard\TrainerController;
 use App\Http\Controllers\API\PageController;
-use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\NewsController;
-use App\Models\Admin;
-use App\Models\page;
-use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,23 +24,21 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
- Route::apiResource('/page',PageController::class);
+Route::apiResource('/page', PageController::class);
 
 
-Route::post('/login/{type}',[AccessTokensController::class,'login']);
-Route::post('/verify',[AccessTokensController::class,'verify']);
-// Route::prefix('/dashboard')->function({
-//    Route::apiResource('/admin',AdminController::class); 
-// });
+Route::post('/login/{type}', [AccessTokensController::class, 'login']);
+Route::post('/verify', [AccessTokensController::class, 'verify']);
+
 
 Route::group(['prefix' => '/dashboard'], function () {
-      Route::apiResource('/admin',AdminController::class); 
-      Route::apiResource('/trainee',TraineeController::class);
-      Route::apiResource('/trainer',TrainerController::class);
+    Route::apiResource('/admin', AdminController::class);
+    Route::apiResource('/trainee', TraineeController::class);
+    Route::apiResource('/trainer', TrainerController::class);
 });
-Route::apiResource('courses',CourseController::class);
+Route::apiResource('courses', CourseController::class);
 
-Route::post('/images',[NewsController::class,'store']);
+Route::post('/images', [NewsController::class, 'store']);
 Route::post('/images/{news}', [NewsController::class, 'update']);
 
-Route::get('/news',[NewsController::class,'index']);
+Route::get('/news', [NewsController::class, 'index']);

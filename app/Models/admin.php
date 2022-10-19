@@ -5,10 +5,15 @@ namespace App\Models;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\Admin as Authenticatable;
+use Illuminate\Foundation\Auth\User;
 
-class Admin extends Model
+use Laravel\Sanctum\HasApiTokens;
+
+
+class Admin extends User
 {
-    use HasFactory,HasRoles;
+    use HasFactory,HasRoles,HasApiTokens;
 
 
     protected $guard = "admin";
