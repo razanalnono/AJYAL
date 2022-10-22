@@ -18,14 +18,16 @@ class Group extends Model
 
     }
 
-    public function course(){
+    public function course()
+    {
         return $this->hasMany(Course::class,'group_id','id');
     }
 
-    public function trainee(){
-        return $this->belongsToMany(Group::class,'group_trainee','trainee_id','group_id','id','id');
-
+    public function trainees()
+    {
+        return $this->belongsToMany(Group::class,'group_trainee','group_id','trainee_id','id','id');
     }
+    
     public function achievements()
     {
         return $this->hasMany(Achievements::class, 

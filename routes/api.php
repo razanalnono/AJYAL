@@ -38,9 +38,10 @@ use Illuminate\Support\Facades\Route;
 
 // Route::group(['prefix' => '/dashboard'], function () {
 //       Route::apiResource('/admin',AdminController::class); 
-//       Route::apiResource('/trainee',TraineeController::class);
 //       Route::apiResource('/trainer',TrainerController::class);
 // });
+Route::apiResource('/trainees',TraineeController::class);
+Route::post('/trainees/{trainee}', [TraineeController::class, 'update']);
 Route::apiResource('/page', PageController::class);
 Route::post('/page/{page}', [PageController::class, 'update']);
 Route::apiResource('/contact', ContactController::class);
@@ -52,6 +53,7 @@ Route::post('/social/{social}', [SocialController::class, 'update']);
 Route::apiResource('/ourwork', OurworkController::class);
 Route::apiResource('/projects', ProjectsController::class);
 Route::apiResource('/groups', GroupsController::class);
+Route::post('/deleteTraineeFromGroup', [GroupsController::class, 'destroyTrainees']);
 Route::apiResource('/achievements', AchievementsController::class);
 
 

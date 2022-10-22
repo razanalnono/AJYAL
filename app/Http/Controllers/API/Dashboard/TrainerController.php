@@ -12,7 +12,6 @@ class TrainerController extends Controller
     //
     public function index()
     {
-        //
         return Trainer::select('firstName', 'lastName', 'gender', 'avatar', 'email')->get();
     }
 
@@ -24,8 +23,6 @@ class TrainerController extends Controller
      */
     public function store(Request $request)
     {
-        //
-
         $data = $request->except('avatar');
         $data['avatar'] = $this->uploadImage($request);
 

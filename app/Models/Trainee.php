@@ -15,6 +15,20 @@ class Trainee extends Model
         'email', 'password',
     ];
 
+    public static function rules($id = 0) {
+        return [
+            'firstName' => ['required', 'string', 'max:255', 'min:3'],
+            'lastName' => ['required', 'string', 'max:255', 'min:3'],
+            'email' => ['required', "unique:trainees,email,$id"],
+            'password' => ['required', 'min:3'],
+            'nationalID' => ['required', 'numeric', "unique:trainees,nationalID,$id"],
+            'gender' => ['required', 'in:female,male'],
+            'mobile' => ['required', 'string', "unique:trainees,mobile,$id"],
+            'avatar' => ['image', 'max:1048576'],
+            'groups' => ['required'],
+        ];
+    }
+
     public function groups(){
         return $this->belongsToMany(Group::class,'group_trainee','trainee_id','group_id','id','id');
     }
