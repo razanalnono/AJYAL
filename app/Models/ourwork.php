@@ -5,16 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ourwork extends Model
+class OurWork extends Model
 {
     use HasFactory;
+    protected $fillable = ['report','deleted_images'];
+    protected $table="ourworks";
 
-    protected $fillable = [
-        'report'
-    ];
 
     public function images()
     {
-        return $this->hasMany(Image::class, 'ourworks_id', 'id');
+        return $this->morphMany(Image::class, 'reference');
+    }
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($work) {
+            $work->images()->delete();
+        });
     }
 }

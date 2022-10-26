@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\Dashboard;
 use App\Models\Trainee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Mail\ActivationCode;
+use App\Mail\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -17,7 +17,7 @@ class TraineeController extends Controller
     public function index()
     {
         //
-        return Trainee::select('firstName', 'lastName', 'gender', 'avatar', 'email')->get();
+        return Trainee::select('firstName', 'lastName', 'gender', 'avatar', 'email')->paginate();
     }
 
     /**
@@ -33,7 +33,7 @@ class TraineeController extends Controller
             'email' => 'required',
             'firstName' => 'required',
             'lastName' => 'required',
-            'gender' => ''
+            'gender' => 'in:female,male'
         ]);
 
         $email = $request->email;
@@ -51,7 +51,7 @@ class TraineeController extends Controller
         $data['avatar'] = $this->uploadImage($request);
 
         $trainee = Trainee::create($data);
-        Mail::to($trainee->email)->send(new ActivationCode($password));
+        Mail::to($trainee->email)->send(new Password($password));
 
         return response()->json([
             'message' => 'Trainee Created'
@@ -80,6 +80,9 @@ class TraineeController extends Controller
     {
         //
         $old_image = $trainee->avatar;
+        $password = Random::generate('5');
+        $data['password'] = Hash::make($password);
+
         $data = $request->except('avatar');
         $new_image = $this->uploadImage($request);
         if ($new_image) {
@@ -87,6 +90,7 @@ class TraineeController extends Controller
         }
 
         $trainee->update($data);
+        Mail::to($trainee->email)->send(new Password($password));
 
         if ($old_image && $new_image) {
             Storage::disk('public')->delete($old_image);
@@ -115,11 +119,11 @@ class TraineeController extends Controller
 
     protected function uploadImage(Request $request)
     {
-        if (!$request->hasFile('image')) {
+        if (!$request->hasFile('avatar')) {
             return;
         }
 
-        $file = $request->file('image'); // UploadedFile Object
+        $file = $request->file('avatar'); // UploadedFile Object
 
         $path = $file->store('uploads', [
             'disk' => 'public'

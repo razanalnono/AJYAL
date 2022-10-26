@@ -2,18 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class News extends Model
 {
     use HasFactory;
 
-    protected $fillable=['title','description','in_slider'];
+    protected $fillable=['title','description','in_slider', 'deleted_images'];
 
   public function images(){
-    return $this->morphMany(Images::class,'reference');
+    return $this->morphMany(Image::class,'reference');
   }
 
-  
+  protected static function boot()
+  {
+    parent::boot();
+
+    static::deleting(function ($news) {
+      $news->images()->delete();
+
+    });
+  }
 }

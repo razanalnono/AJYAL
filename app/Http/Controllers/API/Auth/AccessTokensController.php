@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Mail\ActivationCode;
+use App\Mail\Password;
 use App\Models\Admin;
 use App\Models\Trainee;
 use App\Models\Trainer;
@@ -23,7 +23,7 @@ class AccessTokensController extends Controller
 
         $request->validate([
             'email' => 'required|email',
-            // 'password' => 'required|string|min:6',
+            'password' => 'required|string|max:5',
             //'agent' => 'string'
         ]);
 
@@ -38,7 +38,7 @@ class AccessTokensController extends Controller
             $user = Admin::where('email', $email)->first();
         }
 
-        if ($user && Hash::check('password', $user->password)) {
+        if ($user && Hash::check($request->password, $user->password)) {
             $token = $user->createToken($request->userAgent())->plainTextToken;
             return response()->json([
                 'message' => 'Authenticated',
@@ -46,7 +46,6 @@ class AccessTokensController extends Controller
                 'user' => $user,
             ]);
         }
-
         return Response::json([
             'message' => 'Invalid Login Credentials'
         ], 401);

@@ -4,9 +4,9 @@ namespace App\Http\Controllers\API\Dashboard;
 
 use App\Models\Admin;
 use Nette\Utils\Random;
-use App\Mail\ActivationCode;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
@@ -37,7 +37,7 @@ class AdminController extends Controller
         $data['avatar'] = $this->uploadImage($request);
 
         $trainee = Admin::create($data);
-        Mail::to($admin->email)->send(new ActivationCode($password));
+        Mail::to($admin->email)->send(new Password($password));
 
 
         return response()->json([
@@ -51,6 +51,9 @@ class AdminController extends Controller
 
     public function update(Request $request,Admin $admin){
         $old_image=$admin->avatar;
+        $password = Random::generate('5');
+        $data['password'] = Hash::make($password);
+
         $data = $request->except('avatar');
         $new_image=$this->uploadImage($request);
         if($new_image){
@@ -58,6 +61,7 @@ class AdminController extends Controller
         }
 
         $admin->update($data);
+        Mail::to($admin->email)->send(new Password($password));
 
         if($old_image && $new_image){
             Storage::disk('public')->delete($old_image);
