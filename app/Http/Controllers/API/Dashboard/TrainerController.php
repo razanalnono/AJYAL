@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
+use App\Models\Course;
 use App\Models\Trainer;
+use Nette\Utils\Random;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\Password;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class TrainerController extends Controller
@@ -12,7 +17,11 @@ class TrainerController extends Controller
     //
     public function index()
     {
-        return Trainer::select('firstName', 'lastName', 'gender', 'avatar', 'email')->get();
+
+        //
+        $trainer = Course::query()->select('name','trainer_id')
+        ->with(['trainer:id,firstName,lastName,gender,avatar,email'])->get();
+        return $trainer;
     }
 
     /**
@@ -21,12 +30,28 @@ class TrainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request,Trainer $trainer)
     {
+
+        //
+
+        $email = $request->email;
+        $trainer = Trainer::where('email', $email)->first();
+
+        $password = Random::generate('5');
+
+        // $hashed = Hash::make($password);
+        // $trainee->password = $hashed;
+
+
         $data = $request->except('avatar');
+        $data['password'] = Hash::make($password);
+
         $data['avatar'] = $this->uploadImage($request);
 
-        Trainer::create($request->post());
+        $trainer = Trainer::create($data);
+        Mail::to($trainer->email)->send(new Password($password));
+
         return response()->json([
             'message' => 'Trainer Created'
         ]);
@@ -55,12 +80,17 @@ class TrainerController extends Controller
         //
         $old_image = $trainer->avatar;
         $data = $request->except('avatar');
+        
+        $password = Random::generate('5');
+        $data['password'] = Hash::make($password);
+
         $new_image = $this->uploadImage($request);
         if ($new_image) {
             $data['avatar'] = $new_image;
         }
 
         $trainer->update($data);
+        Mail::to($trainer->email)->send(new Password($password));
 
         if ($old_image && $new_image) {
             Storage::disk('public')->delete($old_image);
@@ -89,11 +119,11 @@ class TrainerController extends Controller
 
     protected function uploadImage(Request $request)
     {
-        if (!$request->hasFile('image')) {
+        if (!$request->hasFile('avatar')) {
             return;
         }
 
-        $file = $request->file('image'); // UploadedFile Object
+        $file = $request->file('avatar'); // UploadedFile Object
 
         $path = $file->store('uploads', [
             'disk' => 'public'

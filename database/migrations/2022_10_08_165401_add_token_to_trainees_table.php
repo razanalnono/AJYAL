@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Pages', function (Blueprint $table) {
-            $table->id();
-            $table->text('bio');
-            $table->text('goals');
-            $table->text('vision');
-            $table->string('logo')->nullable();
-            $table->timestamps();
+        Schema::table('trainees', function (Blueprint $table) {
+            //
+            $table->string('token');
         });
     }
 
@@ -30,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Pages');
+        Schema::table('trainees', function (Blueprint $table) {
+            //
+            $table->dropColumn('token');
+        });
     }
 };

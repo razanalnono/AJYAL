@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Models\page;
+use App\Models\Page;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,7 +25,7 @@ class PageController extends Controller
     public function index()
     {
         //
-        return page::select('bio','vision','goals','logo')->get();
+        return Page::select('bio','vision','goals','logo')->get();
     }
 
     /**
@@ -42,11 +42,17 @@ class PageController extends Controller
             'goals'=>'required',
             'logo'=>'nullable|image',
         ]);
-        // $logoName=Str::random().'.'.$request->logo->getClientOriginalExtension();
+
+        //  $logoName=Str::random().'.'.$request->logo->getClientOriginalExtension();
         // Storage::disk('public')->putFileAs('logo/image',$request->logo,$logoName);
-        page::create($request->post());
+        // Page::create($request->post());
+
+        $data = $request->except('logo');
+        $data['logo'] = $this->uploadImage($request);
+        $page = Page::create($data);
         return response()->json([
-            'message'=>'Added Successfully'
+            'message'=>'Added Successfully',
+            'data'=>$page
         ]);
     }
     /**
@@ -67,7 +73,7 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, page $page)
+    public function update(Request $request, Page $page)
     {
         //
         $request->validate([
@@ -78,27 +84,22 @@ class PageController extends Controller
         ]);
 
 
-// $page->fill($request->post())->update();
-// if($request->hasFile('logo')){
-// if($page->logo)
-// {
-//     $isExist = Storage::disk('public')->exists('logo/image'.$page->logo);
-//     if($isExist){
-//                 Storage::disk('public')->delete('logo/image' . $page->logo);
-//     }
-// }        
-//         $logoName = Str::random() . '.' . $request->logo->getClientOriginalExtension();
-//         Storage::disk('public')->putFileAs('logo/image', $request->logo, $logoName);
-//     $page->logo=$logoName;
-//     $page->save();
-// }
-// $page->save();
-
-$page->update($request->all());
-
+        //$page->update($request->all());
+       // $page = Page::findOrFail($page);
+        $old_image = $page->logo;
+        $data = $request->except('logo');
+        $new_image = $this->uploadImage($request);
+        if ($new_image) {
+            $data['logo'] = $new_image;
+        }
+        $page->update($data);
+        if ($old_image && $new_image) {
+            Storage::disk('public')->delete($old_image);
+        }
 
         return response()->json([
-            'message' => 'Updated Successfully'
+            'message' => 'Updated Successfully',
+            'data'=>$page
         ]);
     }
 
@@ -108,7 +109,7 @@ $page->update($request->all());
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(page $page)
+    public function destroy(Page $page)
     {
 
         // if ($page->logo) {
@@ -121,6 +122,19 @@ $page->update($request->all());
         return response()->json([
             'message'=>'Deleted Successfully'
         ]);
+    }
+
+
+    protected function uploadImage(Request $request)
+    {
+        if (!$request->hasFile('logo')) {
+            return;
+        }
+        $file = $request->file('logo');
+        $path = $file->store('uploads', [
+            'disk' => 'public'
+        ]);
+        return $path;
     }
     
 }

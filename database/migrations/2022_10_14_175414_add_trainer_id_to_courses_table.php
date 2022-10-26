@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Pages', function (Blueprint $table) {
-            $table->id();
-            $table->text('bio');
-            $table->text('goals');
-            $table->text('vision');
-            $table->string('logo')->nullable();
-            $table->timestamps();
+        Schema::table('courses', function (Blueprint $table) {
+            //
+            $table->foreignId('trainer_id')->constrained('trainers')->cascadeOnDelete();
+
         });
     }
 
@@ -30,6 +27,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Pages');
+        Schema::table('courses', function (Blueprint $table) {
+            //
+            $table->dropColumn('trainer_id');
+        });
     }
 };

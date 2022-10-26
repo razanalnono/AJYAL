@@ -13,13 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Pages', function (Blueprint $table) {
-            $table->id();
-            $table->text('bio');
-            $table->text('goals');
-            $table->text('vision');
-            $table->string('logo')->nullable();
-            $table->timestamps();
+        Schema::table('admins', function (Blueprint $table) {
+            //
+            $table->string('activation_code');
+
         });
     }
 
@@ -30,6 +27,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Pages');
+        Schema::table('admins', function (Blueprint $table) {
+            //
+            $table->dropColumn('activation_code');
+
+        });
     }
 };

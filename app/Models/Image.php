@@ -9,12 +9,12 @@ class Image extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'url', 'ourworks_id'
-    ];
+  protected $fillable = ['images', 'reference_type', 'reference_id'];
 
-public function ourwork()
-{
-  return $this->belongsTo(ourwork::class, 'ourworks_id', 'id');
-}
+
+  public function images()
+  {
+    return $this->morphTo();
+  }
+  
 }
