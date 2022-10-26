@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('/page', PageController::class);
 
 
+
 Route::post('/login/{type}', [AccessTokensController::class, 'login']);
 //Route::post('/verify', [AccessTokensController::class, 'verify']);
 
@@ -57,7 +58,6 @@ Route::apiResource('courses', CourseController::class);
 Route::apiResource('/news', NewsController::class);
 Route::post('/news/{news}', [NewsController::class, 'update']);
 
-Route::get('/news', [NewsController::class, 'index']);
 
 Route::apiResource('/page', PageController::class);
 Route::post('/page/{page}', [PageController::class, 'update']);
@@ -71,7 +71,10 @@ Route::apiResource('/programs', ProgramsController::class);
 Route::post('/programs/{program}', [ProgramsController::class, 'update']);
 Route::apiResource('/social', SocialController::class);
 Route::post('/social/{social}', [SocialController::class, 'update']);
-// Route::apiResource('/ourwork', OurworkController::class);
 Route::apiResource('/projects', ProjectsController::class);
 Route::apiResource('/groups', GroupsController::class);
+
+Route::post('/deleteTraineeFromGroup', [GroupsController::class, 'destroyTrainees']);
 Route::apiResource('/achievements', AchievementsController::class);
+
+

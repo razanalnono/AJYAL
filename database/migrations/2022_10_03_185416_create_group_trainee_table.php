@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('trainee_id')->constrained('trainees')->cascadeOnDelete();
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->primary(['trainee_id','group_id']);
-            $table->timestamps();
         });
     }
 

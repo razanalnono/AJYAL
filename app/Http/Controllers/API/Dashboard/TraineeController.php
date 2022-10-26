@@ -5,10 +5,12 @@ namespace App\Http\Controllers\API\Dashboard;
 use App\Models\Trainee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Mail\Password;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use App\Mail\Password;
+use Illuminate\Support\Facades\Mail;
 use Nette\Utils\Random;
 
 class TraineeController extends Controller
@@ -17,7 +19,9 @@ class TraineeController extends Controller
     public function index()
     {
         //
-        return Trainee::select('firstName', 'lastName', 'gender', 'avatar', 'email')->paginate();
+        $trainees = Trainee::with('groups')->paginate();
+        return $trainees;
+
     }
 
     /**
@@ -28,13 +32,10 @@ class TraineeController extends Controller
      */
     public function store(Request $request, Trainee $trainee)
     {
+        $request->validate(Trainee::rules());
+    
         //
-        $request->validate([
-            'email' => 'required',
-            'firstName' => 'required',
-            'lastName' => 'required',
-            'gender' => 'in:female,male'
-        ]);
+
 
         $email = $request->email;
         $trainee = Trainee::where('email', $email)->first();
@@ -49,8 +50,14 @@ class TraineeController extends Controller
         $data['password'] = Hash::make($password);
 
         $data['avatar'] = $this->uploadImage($request);
+        $trainee =Trainee::create($data);
+        foreach ($request->groups as $groups) {
+            DB::table('group_trainee')->insert([
+                'trainee_id' => $trainee->id,
+                'group_id' => $groups
+            ]);
+        }
 
-        $trainee = Trainee::create($data);
         Mail::to($trainee->email)->send(new Password($password));
 
         return response()->json([
@@ -64,9 +71,10 @@ class TraineeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Trainee $trainee)
     {
-        //
+        return $trainee->load('groups');
+        
     }
 
     /**
@@ -76,9 +84,11 @@ class TraineeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Trainee $trainee)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate(Trainee::rules($id));
+  
+        $trainee = Trainee::findOrFail($id);
         $old_image = $trainee->avatar;
         $password = Random::generate('5');
         $data['password'] = Hash::make($password);
@@ -88,14 +98,21 @@ class TraineeController extends Controller
         if ($new_image) {
             $data['avatar'] = $new_image;
         }
-
         $trainee->update($data);
+
+        DB::table('group_trainee')->where('trainee_id', $trainee->id)->delete();
+        foreach ($request->groups as $groupe) {
+            DB::table('group_trainee')->insert([
+                'trainee_id' => $trainee->id,
+                'group_id' => $groupe
+            ]);
+        }
         Mail::to($trainee->email)->send(new Password($password));
+
 
         if ($old_image && $new_image) {
             Storage::disk('public')->delete($old_image);
         }
-
         return response()->json([
             'message' => 'Updated Successfully'
         ]);
@@ -107,13 +124,17 @@ class TraineeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Trainee $trainee)
+    public function destroy($id)
     {
         //
+        $trainee = Trainee::findOrFail($id);
         $trainee->delete();
-        return response()->json([
-            'message' => 'Deleted Successfully'
-        ]);
+        if ($trainee->avatar) {
+                Storage::disk('public')->delete($trainee->avatar);
+        }
+        return [
+            'message' => 'Deleted Successfully.',
+        ];
     }
 
 

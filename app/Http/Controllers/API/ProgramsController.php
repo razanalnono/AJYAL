@@ -96,11 +96,10 @@ class ProgramsController extends Controller
     public function destroy($id)
     {
         $program = Program::findOrFail($id);
+        $program->delete();
         if ($program->image) {
                 Storage::disk('public')->delete($program->image);
         }
-        Program::destroy($id);
-
         return [
             'message' => 'Deleted Successfully.',
         ];
