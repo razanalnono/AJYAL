@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ActivationCode extends Mailable
+class Password extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,6 +29,6 @@ class ActivationCode extends Mailable
      */
     public function build()
     {
-return $this->markdown('emails.activate')->with(['password'=>$this->password]);
+return $this->markdown('emails.password')->with(['password'=>$this->password]);
     }
 }

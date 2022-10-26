@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
-use App\Models\Images;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,7 +17,7 @@ class NewsController extends Controller
     public function index()
     {
         //
-        return News::with('images')->select('title', 'description', 'in_slider')->where('in_slider', 1)->get();
+        return News::with('images')->paginate();
     }
 
     /**
@@ -38,13 +38,15 @@ class NewsController extends Controller
         $news = News::create($data);
 
         foreach ($request->images as $image) {
-            $data = [];
+           // $data = [];
             $data['images'] = $this->uploadImage($image);
+            
+            $news->images()->create($data);
 
-            $data['reference_id'] = $news->id;
-            $data['reference_type'] = $news->getMorphClass();
+            // $data['reference_id'] = $news->id;
+            // $data['reference_type'] = $news->getMorphClass();
 
-            Images::create($data);
+            // Image::create($data);
         }
 
 
@@ -78,31 +80,38 @@ class NewsController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'in_slider' => 'in:0,1'
+            'in_slider' => 'boolean',
+            'deleted_images' => 'array',
         ]);
 
 
-        $data =  $request->except('images');
+        $data =  $request->except(['images','deleted_images']);
         $news->update($data);
 
         $old_image = $news->images;
-        $data = $request->except('images');
+        $data = $request->except(['images', 'deleted_images']);
+
         // $new_image = $this->uploadImage($request);
 
-        foreach ($news->images as $img) {
-            $img->delete();
-        }
+        if ($request->deleted_images) {
+            foreach ($news->images()->whereIn('id',$request->deleted_images)->get() as $img) {
+                $img->delete();
+                Storage::disk('public')->delete($img);
 
+            }
+        }   
+        if($request->images){
         foreach ($request->images as $image) {
             $data = [];
             $data['images'] = $this->uploadImage($image);
 
-            $data['reference_id'] = $news->id;
-            $data['reference_type'] = $news->getMorphClass();
+            $news->images()->create($data);
 
-            Images::create($data);
+            // $data['reference_id'] = $news->id;
+            // $data['reference_type'] = $news->getMorphClass();
+            // Image::create($data);
         }
-
+    }
         // if ($new_image) {
         //     $data = [];
         //     $data['images'] = $new_image;
@@ -110,11 +119,14 @@ class NewsController extends Controller
         //     $data['reference_id'] = $news->id;
         //     $data['reference_type'] = $news->getMorphClass();
 
+        // لا تنسي موضوع أن يحذفها من الفايل
+
+
         //     if ($old_image && $new_image) {
         //         Storage::disk('public')->delete($old_image);
         //     }
 
-        //     Images::create($data);
+        //     Image::create($data);
         // }
 
 
@@ -132,7 +144,9 @@ class NewsController extends Controller
     public function destroy(News $news)
     {
         //
-        $news->delete();
+         $news->delete();
+        //$news->images()->delete();
+
         return response()->json([
             'message' => 'News Deleted Successfully'
         ]);
