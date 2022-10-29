@@ -9,28 +9,31 @@ class Group extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
+    protected $fillable = [
         'name', 'project_id'
     ];
-    
-    public function project(){
-        return $this->belongsTo(Project::class, 'project_id', 'id');
 
+    public function project()
+    {
+        return $this->belongsTo(Project::class, 'project_id', 'id');
     }
 
     public function course()
     {
-        return $this->hasMany(Course::class,'group_id','id');
+        return $this->hasMany(Course::class, 'group_id', 'id');
     }
 
     public function trainees()
     {
-        return $this->belongsToMany(Group::class,'group_trainee','group_id','trainee_id','id','id');
+        return $this->belongsToMany(Trainee::class, 'group_trainee', 'trainee_id', 'group_id', 'id', 'id');
     }
-    
+
     public function achievements()
     {
-        return $this->hasMany(Achievements::class, 
-        'trainee_id', 'id');
+        return $this->hasMany(
+            Achievements::class,
+            'trainee_id',
+            'id'
+        );
     }
 }

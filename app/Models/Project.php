@@ -12,8 +12,9 @@ class Project extends Model
         'start_date', 'end_date',
         'name', 'financier',
     ];
-     
-    public function groups(){
+
+    public function groups()
+    {
         return $this->hasMany(Group::class, 'project_id', 'id');
     }
 }

@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Trainee extends User
 {
-    use HasFactory,HasApiTokens;
+    use HasFactory, HasApiTokens;
     protected $fillable = [
         'firstName', 'lastName',
         'nationalID', 'gender',
@@ -18,7 +18,8 @@ class Trainee extends User
         'email', 'password',
     ];
 
-    public static function rules($id = 0) {
+    public static function rules($id = 0)
+    {
         return [
             'firstName' => ['required', 'string', 'max:255', 'min:3'],
             'lastName' => ['required', 'string', 'max:255', 'min:3'],
@@ -32,22 +33,16 @@ class Trainee extends User
         ];
     }
 
-    public function groups(){
-        return $this->belongsToMany(Group::class,'group_trainee','trainee_id','group_id','id','id');
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_trainee', 'trainee_id', 'group_id', 'id', 'id');
     }
-
-     public function attendance(){
-        return $this->hasMany(attendance::class,'trainee_id','id');
+    public function achievements()
+    {
+        return $this->hasMany(Achievements::class, 'trainee_id', 'id');
     }
-
-    public function achievements(){
-        return $this->hasMany(Achievements::class,'trainee_id','id');
-    }
-
     public function setfullNameAttribute()
     {
         return ($this->firstName) . ' ' . ($this->lastName);
     }
-
-    
 }

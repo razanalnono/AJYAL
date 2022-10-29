@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class News extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
-    protected $fillable=['title','description','in_slider', 'deleted_images'];
+  protected $fillable = ['title', 'description', 'in_slider', 'deleted_images'];
 
-  public function images(){
-    return $this->morphMany(Image::class,'reference');
+  public function images()
+  {
+    return $this->morphMany(Image::class, 'reference');
   }
 
   protected static function boot()
@@ -22,7 +23,6 @@ class News extends Model
 
     static::deleting(function ($news) {
       $news->images()->delete();
-
     });
   }
 }

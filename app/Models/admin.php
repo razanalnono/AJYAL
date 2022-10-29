@@ -13,22 +13,21 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Admin extends User
 {
-    use HasFactory,HasRoles,HasApiTokens;
+    use HasFactory, HasRoles, HasApiTokens;
 
 
     protected $guard = "admin";
     protected $guard_name = "admin";
-    
+
     protected $fillable = [
-        'firstName','lastName',
-         'nationalID', 'gender', 
-         'mobile', 'avatar',
-        'email','password',
+        'firstName', 'lastName',
+        'nationalID', 'gender',
+        'mobile', 'avatar',
+        'email', 'password',
     ];
 
     public function setfullNameAttribute()
     {
         return ($this->firstName) . ' ' . ($this->lastName);
     }
- 
 }

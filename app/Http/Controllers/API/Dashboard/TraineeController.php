@@ -21,7 +21,6 @@ class TraineeController extends Controller
         //
         $trainees = Trainee::with('groups')->paginate();
         return $trainees;
-
     }
 
     /**
@@ -33,7 +32,7 @@ class TraineeController extends Controller
     public function store(Request $request, Trainee $trainee)
     {
         $request->validate(Trainee::rules());
-    
+
         //
 
 
@@ -50,7 +49,7 @@ class TraineeController extends Controller
         $data['password'] = Hash::make($password);
 
         $data['avatar'] = $this->uploadImage($request);
-        $trainee =Trainee::create($data);
+        $trainee = Trainee::create($data);
         foreach ($request->groups as $groups) {
             DB::table('group_trainee')->insert([
                 'trainee_id' => $trainee->id,
@@ -74,7 +73,6 @@ class TraineeController extends Controller
     public function show(Trainee $trainee)
     {
         return $trainee->load('groups');
-        
     }
 
     /**
@@ -87,7 +85,7 @@ class TraineeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate(Trainee::rules($id));
-  
+
         $trainee = Trainee::findOrFail($id);
         $old_image = $trainee->avatar;
         $password = Random::generate('5');
@@ -130,7 +128,7 @@ class TraineeController extends Controller
         $trainee = Trainee::findOrFail($id);
         $trainee->delete();
         if ($trainee->avatar) {
-                Storage::disk('public')->delete($trainee->avatar);
+            Storage::disk('public')->delete($trainee->avatar);
         }
         return [
             'message' => 'Deleted Successfully.',

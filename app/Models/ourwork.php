@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class OurWork extends Model
 {
     use HasFactory;
-    protected $fillable = ['report','deleted_images'];
-    protected $table="ourworks";
+    protected $fillable = ['report', 'deleted_images'];
+    protected $table = "ourworks";
 
 
     public function images()

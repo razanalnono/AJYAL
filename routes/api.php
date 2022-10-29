@@ -10,7 +10,9 @@ use App\Http\Controllers\NewsController;
 
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\Dashboard\AchievementsController;
+use App\Http\Controllers\API\Dashboard\AttendencesController;
 use App\Http\Controllers\API\Dashboard\GroupsController;
+use App\Http\Controllers\API\Dashboard\PresenceAbsencesController;
 use App\Http\Controllers\API\Dashboard\ProjectsController;
 use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\InfoController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\API\ProgramsController;
 use App\Http\Controllers\API\SocialController;
 use App\Http\Controllers\OurWorkController;
 use App\Models\Admin;
+use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,7 +37,6 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::apiResource('/page', PageController::class);
 
 
 
@@ -76,5 +78,12 @@ Route::apiResource('/groups', GroupsController::class);
 
 Route::post('/deleteTraineeFromGroup', [GroupsController::class, 'destroyTrainees']);
 Route::apiResource('/achievements', AchievementsController::class);
+
+Route::apiResource('/attendences', AttendencesController::class);
+
+
+Route::get('get-presence_absence-for-course',[PresenceAbsencesController::class, 'index']);
+Route::post('store-presence_absence-for-course',[PresenceAbsencesController::class, 'store']);
+Route::put('update-presence_absence-for-course/{id}',[PresenceAbsencesController::class, 'update']);
 
 
