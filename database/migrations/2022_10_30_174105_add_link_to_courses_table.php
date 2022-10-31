@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Ourworks', function (Blueprint $table) {
-            $table->id();
-            $table->text('report');
-            $table->timestamps();
+        Schema::table('courses', function (Blueprint $table) {
+            //
+            $table->string('link');
         });
     }
 
@@ -27,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Ourworks');
+        Schema::table('courses', function (Blueprint $table) {
+            //
+            $table->dropColumn('link');
+        });
     }
 };

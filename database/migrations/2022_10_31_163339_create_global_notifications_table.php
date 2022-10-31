@@ -13,9 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('Ourworks', function (Blueprint $table) {
+        Schema::create('global_notifications', function (Blueprint $table) {
             $table->id();
-            $table->text('report');
+            $table->string('title', 255)->nullable();
+            $table->text('message')->nullable();
+            $table->string('image')->nullable();
+            $table->enum('type',['trainee','trainer']);
+            $table->integer('admin_id')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('Ourworks');
+        Schema::dropIfExists('global_notifications');
     }
 };

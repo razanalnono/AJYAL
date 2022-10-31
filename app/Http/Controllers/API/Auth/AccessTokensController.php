@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\API\Auth;
 
-use App\Http\Controllers\Controller;
-use App\Mail\Password;
+use App\Models\User;
 use App\Models\Admin;
+use App\Mail\Password;
 use App\Models\Trainee;
 use App\Models\Trainer;
 
-use App\Models\User;
+use Nette\Utils\Random;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
-use Nette\Utils\Random;
 
 class AccessTokensController extends Controller
 {
@@ -52,6 +53,45 @@ class AccessTokensController extends Controller
     }
 
 
+    public function changePassword(Request $request, $type)
+    {
+
+        $password =   $request->password;
+        $email = $request->email;
+
+        if ($type == 'trainee') {
+            $user = Trainee::where('email', $email)->first();
+        } elseif ($type == 'trainer') {
+            $user = Trainer::where('email', $email)->first();
+        } else {
+            $user = Admin::where('email', $email)->first();
+        }
+
+        if ($user && (Hash::check($request->old_password, $user->password))) {
+            $token = $user->createToken($request->userAgent())->plainTextToken;
+            $user->update([
+                
+                'password' => Hash::make($request->password),
+
+            ]);
+            return Response::json([
+                'message' => 'Authenticated',
+                'token' => $token,
+            ], 201);
+        }
+
+
+        return Response::json([
+            'message' => 'Invalid Login Credentials'
+        ], 401);
+    }
+    public function logout(Request $request)
+    {
+        $user = Auth::guard('sanctum')->user();
+        return Response::json([
+            'message' => 'Authenticated',
+            'user' => $user,
+        ], 201);    }
     // public function verify(Request $request){
 
     // $acode=$request->activation_code;
@@ -76,45 +116,45 @@ class AccessTokensController extends Controller
     // }
 
 
-    public function verify(Request $request)
-    {
-        $email = $request->email;
-        $acode = $request->activation_code;
+    // public function verify(Request $request)
+    // {
+    //     $email = $request->email;
+    //     $acode = $request->activation_code;
 
-        if ($admin = Admin::where('email', $email)->where('activation_code', $acode)->first()) {
-            $admin->status == 1;
-            $new_token = $admin->createToken('verify' . $admin->id)->plainTextToken;
-            $admin->token = $new_token;
-            $admin->save();
-            return Response::json([
-                //     'token' => $new_token->plainTextToken,
-                'admin' => $admin,
-                'meassage' => 'Verified',
-            ]);
-        } elseif ($trainee = Trainee::where('email', $email)->where('activation_code', $acode)->first()) {
-            $trainee->status == 1;
-            $new_token = $trainee->createToken('verify' . $trainee->id)->plainTextToken;
-            $trainee->token = $new_token;
-            $trainee->save();
-            return Response::json([
-                //     'token' => $new_token->plainTextToken,
-                'trainee' => $trainee,
-                'meassage' => 'Verified',
-            ]);
-        } elseif ($trainer = Admin::where('email', $email)->where('activation_code', $acode)->first()) {
-            $trainer->status == 1;
-            $new_token = $trainer->createToken('verify' . $trainer->id)->plainTextToken;
-            $trainer->token = $new_token;
-            $trainer->save();
-            return Response::json([
-                //     'token' => $new_token->plainTextToken,
-                'trainer' => $trainer,
-                'meassage' => 'Verified',
-            ]);
-        } else {
-            return Response::json([
-                'message' => 'Not verified'
-            ]);
-        }
-    }
+    //     if ($admin = Admin::where('email', $email)->where('activation_code', $acode)->first()) {
+    //         $admin->status == 1;
+    //         $new_token = $admin->createToken('verify' . $admin->id)->plainTextToken;
+    //         $admin->token = $new_token;
+    //         $admin->save();
+    //         return Response::json([
+    //             //     'token' => $new_token->plainTextToken,
+    //             'admin' => $admin,
+    //             'meassage' => 'Verified',
+    //         ]);
+    //     } elseif ($trainee = Trainee::where('email', $email)->where('activation_code', $acode)->first()) {
+    //         $trainee->status == 1;
+    //         $new_token = $trainee->createToken('verify' . $trainee->id)->plainTextToken;
+    //         $trainee->token = $new_token;
+    //         $trainee->save();
+    //         return Response::json([
+    //             //     'token' => $new_token->plainTextToken,
+    //             'trainee' => $trainee,
+    //             'meassage' => 'Verified',
+    //         ]);
+    //     } elseif ($trainer = Admin::where('email', $email)->where('activation_code', $acode)->first()) {
+    //         $trainer->status == 1;
+    //         $new_token = $trainer->createToken('verify' . $trainer->id)->plainTextToken;
+    //         $trainer->token = $new_token;
+    //         $trainer->save();
+    //         return Response::json([
+    //             //     'token' => $new_token->plainTextToken,
+    //             'trainer' => $trainer,
+    //             'meassage' => 'Verified',
+    //         ]);
+    //     } else {
+    //         return Response::json([
+    //             'message' => 'Not verified'
+    //         ]);
+    //     }
+    // }
 }

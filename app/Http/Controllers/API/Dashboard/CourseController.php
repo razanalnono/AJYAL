@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
+use App\Events\SendEmailEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Trainee;
@@ -19,7 +20,7 @@ class CourseController extends Controller
     {
         //
 
-       $courses=Course::query()->select('name', 'start_date','end_date','trainer_id')
+       $courses=Course::query()->select('name','link','start_date','end_date','trainer_id')
             ->with(['trainer' => function ($query) {
             $query->select('id','firstName','lastName');
             }])->get();
@@ -37,11 +38,16 @@ class CourseController extends Controller
         //
         $request->validate([
             'name'=>'required',
-        
             'start_date'=>['required'],
             'end_date'=>['required','after:'.$request->start_date],
         ]);
         Course::create($request->post());
+      
+        // $name = Course::orderByRaw('id DESC')->limit(1)->get('name');
+        // $link = Course::orderByRaw('id DESC')->limit(1)->get('link');
+
+        event(new SendEmailEvent($request->name,$request->link));
+        
         return response()->json([
             'message'=>'Course Created Successfully'
         ]);

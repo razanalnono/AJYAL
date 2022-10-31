@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->enum('platform', ['مستقل', 'upwork', 'freelancer', 'خمسات', 'other'])->default('other');
             $table->string('other')->nullable();
+            $table->string('description');
             $table->float('income');
             $table->foreignId('group_id')->constrained('groups')->cascadeOnDelete();
             $table->foreignId('trainee_id')->constrained('trainees')->cascadeOnDelete();

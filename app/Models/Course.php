@@ -9,7 +9,7 @@ class Course extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'start_date', 'end_date','trainer_id','group_id'];
+    protected $fillable = ['name', 'start_date', 'end_date','trainer_id','group_id','link'];
 
     
     public function group(){

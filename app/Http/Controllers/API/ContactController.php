@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactMail;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Response;
 
 class ContactController extends Controller
@@ -30,13 +33,19 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => ['required', 'email', 'max:255', 'unique:contacts,email'],
-            'phone_number' => ['required', 'string', 'max:255', 'unique:contacts,phone_number'],
+            'email' => ['required', 'email', 'max:255', ],
+            'phone_number' => ['required', 'string', 'max:255'],
             'message' => ['required', 'max:255'],
         ]);
 
         $contact = Contact::create($request->all());
-
+        // $content=[
+        //     'email'=>$request->email,
+        //     'phone_number'=>$request->phone_number,
+        //     'message'=>$request->message,
+        // ];
+        $secretary=Admin::where('email', 'razanomar2014@gmail.com')->first();
+        Mail::to($secretary->email)->send(new ContactMail($request->email,$request->message));
         return Response::json($contact, 201);
     }
 

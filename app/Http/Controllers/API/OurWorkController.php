@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\OurWork;
 use Illuminate\Http\Request;
@@ -48,7 +50,9 @@ class OurWorkController extends Controller
 
 
         return response()->json([
-            'message' => 'Work Added Successfully'
+            'message' => 'Work Added Successfully',
+            'work'=>$work,
+            'code'=>'201'
         ]);
     }
 
@@ -110,7 +114,10 @@ class OurWorkController extends Controller
 
 
         return response()->json([
-            'message' => 'Updated'
+            'message' => 'Updated',
+            'ourwork'=>$work,
+            'code'=>'201'
+            
         ]);
     }
 

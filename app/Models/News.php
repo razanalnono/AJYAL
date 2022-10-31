@@ -20,9 +20,12 @@ class News extends Model
   {
     parent::boot();
 
-    static::deleting(function ($news) {
-      $news->images()->delete();
-
+    static::deleted(function ($news) {
+     $news->images()->delete();
+      foreach($news->images() as $img){
+       
+        Storage::disk('public')->delete($img);
+      }
     });
   }
 }
