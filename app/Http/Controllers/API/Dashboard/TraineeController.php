@@ -32,7 +32,7 @@ class TraineeController extends Controller
      */
     public function store(Request $request, Trainee $trainee)
     {
-        $request->validate(Trainee::rules());
+        // $request->validate(Trainee::rules());
     
         //
 

@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\News;
 use App\Models\Image;
@@ -51,7 +53,9 @@ class NewsController extends Controller
 
 
         return response()->json([
-            'message' => 'News Added Successfully'
+            'message' => 'News Added Successfully',
+            'news'=>$news,
+            'code'=>'201'
         ]);
     }
 
@@ -131,7 +135,9 @@ class NewsController extends Controller
 
 
         return response()->json([
-            'message' => 'Updated'
+            'message' => 'Updated',
+            'news'=>$news,
+            'code'=>'201'
         ]);
     }
 

@@ -120,8 +120,13 @@
             style="width: 100%; background-color: #FFF; max-width: 600px; Margin: 0 auto; padding-bottom: 40px;">
 
             <table class="main-table-first header"
-                style="border-spacing: 0; color: #0D0D0D; width: 100%; Margin: 0 auto; background-image: url(https://i.ibb.co/Gc4XFMt/bg.png); background-repeat: no-repeat; background-size: cover; min-height: 52px; font-family: 'Tajawal', 'system-ui', sans-serif;"
-                width="100%" background="url(https://i.ibb.co/Gc4XFMt/bg.png)">
+                style="border-spacing: 0; color: #0D0D0D; width: 100%; Margin: 0 auto;  background-repeat: no-repeat; background-size: cover; min-height: 52px; font-family: 'Tajawal', 'system-ui', sans-serif;"
+                width="100%" background="#">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#b30000" fill-opacity="1"
+                        d="M0,256L48,256C96,256,192,256,288,261.3C384,267,480,277,576,277.3C672,277,768,267,864,218.7C960,171,1056,85,1152,90.7C1248,96,1344,192,1392,240L1440,288L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
+                    </path>
+                </svg>
                 <tr>
                     <td class="two-column" style="text-align: center; font-size: 0; padding: 5px 0 5px 0;"
                         align="center">
@@ -160,24 +165,23 @@
                                 <td class="inner-td" style="padding: 0;">
                                     <div class="content-box" style="width: 85%; margin: auto; text-align: right;">
                                         <div class="content-logo" style="text-align: left; margin-top: 15px;">
-                                            <img class="logo"
-                                                src="https://scontent.fgza2-3.fna.fbcdn.net/v/t39.30808-6/283695336_111399364920092_756114324422572325_n.png?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=H8AnWeJIhlcAX8Z976a&_nc_ht=scontent.fgza2-3.fna&oh=00_AfCKfKUfzu5ehDoMtNr_EZu1gyvtIOWK3i1q80aHYLVpCw&oe=6364D1DA"
-                                                alt="" width="81" style="border: 0; max-width: 81px;">
+                                            <img class="logo" src="https://scontent.fgza2-3.fna.fbcdn.net/v/t39.30808-6/283695336_111399364920092_756114324422572325_n.png?_nc_cat=104&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=H8AnWeJIhlcAX8Z976a&_nc_ht=scontent.fgza2-3.fna&oh=00_AfCKfKUfzu5ehDoMtNr_EZu1gyvtIOWK3i1q80aHYLVpCw&oe=6364D1DA" alt="" width="81"
+                                                style="border: 0; max-width: 81px;">
                                         </div>
                                         <div class="content-head"
                                             style="text-align: right; margin-bottom: 59px; margin-top: 7px;">
                                             <h4
                                                 style="font-size: 25px; color: #222A41; font-weight: bold; margin-bottom: 7px;">
-                                                AJYAL LOGIN Password</h4>
+                                                {{$name}}</h4>
                                             <p
                                                 style="margin: 0; color: rgba(13, 13, 13, 0.58); font-size: 14px; font-weight: 500;">
                                                 {{date('Y-m-d')}}</p>
                                         </div>
                                         <div class="content-inner">
-                                            <p>كلمة المرور الخاصة بحسابك في مؤسسة أجيال</p>
-                                            <a href="{{$password}}" class="link" target="_blank"
+                                       
+                                            <a href="{{$link}}" class="link" target="_blank"
                                                 style="text-decoration: none; color: #567CE5; font-size: 16px; font-weight: 500; display: inline-block; margin: 16px 0 10px;">
-                                                {{$password}}
+                                                {{$link}}
                                             </a>
                                         </div>
                                         <div class="content-foot"
@@ -185,7 +189,7 @@
                                             <p style="margin: 0; font-size: 15px; color: #0D0D0D;">شكرا لك,</p>
                                             <h4
                                                 style="margin: 0; color: #0D0D0D; font-size: 15px; font-weight: normal;">
-                                                نتمنى لك وقتاً سعيداً ، مؤسسة أجيال المجتمعية </h4>
+                                                نتمنى لك وقتاً سعيداً ، مؤسسة أجيال المجتمعية  </h4>
                                         </div>
                                     </div>
                                 </td>
@@ -264,10 +268,11 @@
                                                                         <li style="display: inline-block; margin: 0;"><a
                                                                                 href="" target="_blank"
                                                                                 style="text-decoration: none; display: inline-block; vertical-align: middle; width: 27px; height: 27px; margin-left: 5px;">
-                                                                                <img src="https://i.ibb.co/WHgqDyV/youtube.png"
+                                                                                <img src="https://www.flaticon.com/free-icons/facebook"
                                                                                     alt="youtube" width="27" height="27"
                                                                                     style="border: 0; Margin-bottom: 0; padding-bottom: 0; width: 27px; height: 27px;">
                                                                             </a>
+
                                                                         </li>
                                                                         <li style="display: inline-block; margin: 0;"><a
                                                                                 href="" target="_blank"

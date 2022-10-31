@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\News;
 use App\Models\Page;
+use Faker\Provider\Lorem;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Faker\Provider\Lorem;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
@@ -26,6 +27,12 @@ class PageController extends Controller
     {
         //
         return Page::select('bio','vision','goals','logo')->get();
+
+        // return [
+        //     'pages' => Page::select('bio','vision','goals','logo')->get(),
+        //     'news'=> News::with('images')->limit(5)->get(),
+            
+        // ];
     }
 
     /**

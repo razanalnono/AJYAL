@@ -43,6 +43,5 @@ class DatabaseSeeder extends Seeder
         // Project::factory(10)->create();
         // Group::factory(30)->create();
         Achievements::factory(16)->create();
-
     }
 }

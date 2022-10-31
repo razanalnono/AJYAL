@@ -21,6 +21,8 @@ class AdminController extends Controller
 
     public function store(Request $request,Admin $admin){
         
+       $request->validate(Admin::rules());
+        
         $email = $request->email;
         $admin = Admin::where('email', $email)->first();
 
@@ -36,12 +38,12 @@ class AdminController extends Controller
 
         $data['avatar'] = $this->uploadImage($request);
 
-        $trainee = Admin::create($data);
+        $admin = Admin::create($data);
         Mail::to($admin->email)->send(new Password($password));
 
 
         return response()->json([
-            'message' => 'Admin Created'
+            'message' => 'Admin Created',
         ]);
         
     }

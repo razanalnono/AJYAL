@@ -34,6 +34,7 @@ class TrainerController extends Controller
     {
 
         //
+           $request->validate(Trainer::rules());
 
         $email = $request->email;
         $trainer = Trainer::where('email', $email)->first();

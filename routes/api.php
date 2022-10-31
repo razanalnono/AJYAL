@@ -1,24 +1,29 @@
 <?php
 
-use App\Http\Controllers\API\Auth\AccessTokensController;
+use App\Models\Admin;
+use App\Models\Course;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\InfoController;
+
+use App\Http\Controllers\API\NewsController;
+
+
+use App\Http\Controllers\API\PageController;
+use App\Http\Controllers\API\SocialController;
+use App\Http\Controllers\API\ContactController;
+use App\Http\Controllers\API\OurWorkController;
+use App\Http\Controllers\API\ProgramsController;
+use App\Http\Controllers\API\NewsletterController;
+use App\Http\Controllers\API\LandingPageController;
 use App\Http\Controllers\API\Dashboard\AdminController;
+use App\Http\Controllers\API\Dashboard\CourseController;
+use App\Http\Controllers\API\Dashboard\GroupsController;
+use App\Http\Controllers\API\Auth\AccessTokensController;
 use App\Http\Controllers\API\Dashboard\TraineeController;
 use App\Http\Controllers\API\Dashboard\TrainerController;
-
-use App\Http\Controllers\NewsController;
-
-
-use App\Http\Controllers\API\ContactController;
-use App\Http\Controllers\API\Dashboard\AchievementsController;
-use App\Http\Controllers\API\Dashboard\GroupsController;
 use App\Http\Controllers\API\Dashboard\ProjectsController;
-use App\Http\Controllers\API\PageController;
-use App\Http\Controllers\API\InfoController;
-use App\Http\Controllers\API\ProgramsController;
-use App\Http\Controllers\API\SocialController;
-use App\Http\Controllers\OurWorkController;
-use App\Models\Admin;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\GlobalNotificationController;
+use App\Http\Controllers\API\Dashboard\AchievementsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,11 +39,12 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::apiResource('/page', PageController::class);
-
 
 
 Route::post('/login/{type}', [AccessTokensController::class, 'login']);
+Route::post('/changePassword/{type}', [AccessTokensController::class, 'changePassword']);
+Route::post('logout/{id}',[AccessTokensController::class,'logout']);
+
 //Route::post('/verify', [AccessTokensController::class, 'verify']);
 
 
@@ -53,7 +59,7 @@ Route::group(['prefix' => '/dashboard'], function () {
     Route::post('/trainer/{trainer}', [TrainerController::class,'update']);
 
 });
-Route::apiResource('courses', CourseController::class);
+Route::middleware('auth:sanctum')->apiResource('/courses',CourseController::class);
 
 Route::apiResource('/news', NewsController::class);
 Route::post('/news/{news}', [NewsController::class, 'update']);
@@ -74,7 +80,10 @@ Route::post('/social/{social}', [SocialController::class, 'update']);
 Route::apiResource('/projects', ProjectsController::class);
 Route::apiResource('/groups', GroupsController::class);
 
+Route::get('LandingPage',[LandingPageController::class,'index']);
+
 Route::post('/deleteTraineeFromGroup', [GroupsController::class, 'destroyTrainees']);
 Route::apiResource('/achievements', AchievementsController::class);
+Route::apiResource('/newsletter',NewsletterController::class);
 
-
+Route::post('/send_notification', [GlobalNotificationController::class, 'send']);
