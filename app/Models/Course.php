@@ -23,4 +23,8 @@ class Course extends Model
     {
         return $this->hasMany(PresenceAbsence::class, 'course_id');
     }
+    public function rates()
+    {
+        return $this->hasMany(Rate::class, 'course_id', 'id')->withDefault();
+    }
 }

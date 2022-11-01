@@ -11,6 +11,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\Dashboard\AchievementsController;
 use App\Http\Controllers\API\Dashboard\AttendencesController;
+use App\Http\Controllers\API\Dashboard\CitiesController;
 use App\Http\Controllers\API\Dashboard\GroupsController;
 use App\Http\Controllers\API\Dashboard\PresenceAbsencesController;
 use App\Http\Controllers\API\Dashboard\ProjectsController;
@@ -48,8 +49,8 @@ Route::group(['prefix' => '/dashboard'], function () {
     Route::apiResource('/admin', AdminController::class);
     Route::post('/admin/{admin}', [AdminController::class,'update']);
 
-    Route::apiResource('/trainee', TraineeController::class);
-    Route::post('/trainee/{trainee}', [TraineeController::class,'update']);
+    // Route::apiResource('/trainee', TraineeController::class);
+    // Route::post('/trainee/{trainee}', [TraineeController::class,'update']);
 
     Route::apiResource('/trainer', TrainerController::class);
     Route::post('/trainer/{trainer}', [TrainerController::class,'update']);
@@ -85,5 +86,13 @@ Route::apiResource('/attendences', AttendencesController::class);
 Route::get('get-presence_absence-for-course',[PresenceAbsencesController::class, 'index']);
 Route::post('store-presence_absence-for-course',[PresenceAbsencesController::class, 'store']);
 Route::put('update-presence_absence-for-course/{id}',[PresenceAbsencesController::class, 'update']);
+
+Route::apiResource('/cities', CitiesController::class);
+
+Route::apiResource('/trainees', TraineeController::class);
+Route::post('/trainees/{trainee}', [TraineeController::class,'update']);
+Route::post('/import-excel', [GroupsController::class,'import']);
+Route::apiResource('rates', RateController::class);
+
 
 

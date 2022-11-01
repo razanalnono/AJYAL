@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use App\Mail\Password;
 use Illuminate\Support\Facades\Mail;
 use Nette\Utils\Random;
@@ -16,10 +15,10 @@ use Nette\Utils\Random;
 class TraineeController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
         //
-        $trainees = Trainee::with('groups')->paginate();
+        $trainees = Trainee::with(['groups', 'city', 'achievements'])->filter($request->query())->get();
         return $trainees;
     }
 
@@ -40,12 +39,7 @@ class TraineeController extends Controller
         $trainee = Trainee::where('email', $email)->first();
 
         $password = Random::generate('5');
-
-        // $hashed = Hash::make($password);
-        // $trainee->password = $hashed;
-
-
-        $data = $request->except('avatar');
+        $data = $request->except(['avatar']);
         $data['password'] = Hash::make($password);
 
         $data['avatar'] = $this->uploadImage($request);
@@ -72,7 +66,7 @@ class TraineeController extends Controller
      */
     public function show(Trainee $trainee)
     {
-        return $trainee->load('groups');
+        return $trainee->load(['groups', 'city', 'achievements']);
     }
 
     /**
