@@ -7,7 +7,7 @@
     <title>AJYAL MAIL</title>
 </head>
 <body>
-    <h3>ِActivation code</h3>
+    <h3>ِThis is your password: </h3>
 <p> {{ $password }}</p>
 </body>
 </html>

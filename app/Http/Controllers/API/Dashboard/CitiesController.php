@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
-
 use App\Http\Controllers\Controller;
-use App\Models\Project;
+use App\Models\city;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class CitiesController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $projects = Project::with('groups')->orderBy('end_date', 'DESC')->filter($request->query())->paginate();
-        return $projects;
+        $cities = city::with('trainees:id,firstName,lastName')->get();
+        return $cities;
     }
 
     /**
@@ -28,12 +27,10 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(Project::rules());
-        $project = Project::create($request->all());
-
+        $request->validate(city::rules());
+        $city = city::create( $request->all() );
         return response()->json([
-            'message' => 'Project created successfully',
-            'project' => $project
+            'message' => 'City created successfully',
         ]);
     }
 
@@ -43,9 +40,9 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(city $city)
     {
-        return $project->load('groups');
+         return $city->load('trainees:id,firstName,lastName');
     }
 
     /**
@@ -55,14 +52,12 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request, city $city)
     {
-        $request->validate(Project::rules());
-        $project->update($request->all());
-
+        $request->validate(city::rules());
+        $city->update( $request->all() );
         return response()->json([
-            'message' => 'Project updated successfully',
-            'project' => $project
+            'message' => 'City updated successfully',
         ]);
     }
 
@@ -72,12 +67,11 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(city $city)
     {
-        Project::destroy($id);
-
+        $city->delete();
         return response()->json([
-            'message' => 'Project deleted successfully',
+            'message' => 'City deleted successfully',
         ]);
     }
 }

@@ -2,22 +2,21 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
-
 use App\Http\Controllers\Controller;
-use App\Models\Project;
+use App\Models\Rate;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class RateController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $projects = Project::with('groups')->orderBy('end_date', 'DESC')->filter($request->query())->paginate();
-        return $projects;
+        $rates = Rate::with(['trinee', 'course']);
+        return $rates;
     }
 
     /**
@@ -28,12 +27,9 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(Project::rules());
-        $project = Project::create($request->all());
-
+        $rate = Rate::create($request->all());
         return response()->json([
-            'message' => 'Project created successfully',
-            'project' => $project
+            'message' => 'Created'
         ]);
     }
 
@@ -43,9 +39,9 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show($id)
     {
-        return $project->load('groups');
+        //
     }
 
     /**
@@ -55,15 +51,9 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request, $id)
     {
-        $request->validate(Project::rules());
-        $project->update($request->all());
-
-        return response()->json([
-            'message' => 'Project updated successfully',
-            'project' => $project
-        ]);
+        //
     }
 
     /**
@@ -74,10 +64,6 @@ class ProjectsController extends Controller
      */
     public function destroy($id)
     {
-        Project::destroy($id);
-
-        return response()->json([
-            'message' => 'Project deleted successfully',
-        ]);
+        //
     }
 }

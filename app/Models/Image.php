@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
-    use HasFactory;
+  use HasFactory;
 
   protected $fillable = ['images', 'reference_type', 'reference_id'];
 
@@ -16,5 +16,4 @@ class Image extends Model
   {
     return $this->morphTo();
   }
-  
 }

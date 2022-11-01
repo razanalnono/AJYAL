@@ -4,13 +4,11 @@ namespace App\Http\Controllers\API\Dashboard;
 
 
 use App\Http\Controllers\Controller;
+use App\Imports\TraineesImport;
 use App\Models\Group;
-use App\Models\Project;
-use App\Models\Trainee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GroupsController extends Controller
 {
@@ -19,9 +17,10 @@ class GroupsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $groups = Group::with('project:id,name', 'trainees')->paginate();
+        $groups = Group::with('project:id,name', 'trainees', 'course', 'achievements')->orderBy('end_date', 'DESC')
+        ->filter($request->query())->paginate();
         return $groups;
     }
 
@@ -33,13 +32,13 @@ class GroupsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'project_id' => ['required', 'exists:projects,id'],
-        ]);
+        $request->validate(Group::rules());
+        $group = Group::create($request->all());
 
-        $group = Group::create();
-        return Response::json($group, 201);
+        return response()->json([
+            'message' => 'Group created successfully',
+            'project' => $group
+        ]);
     }
 
     /**
@@ -50,7 +49,7 @@ class GroupsController extends Controller
      */
     public function show(Group $group)
     {
-        return $group->load('project:id,name');
+        return $group->load('project:id,name', 'trainees', 'course', 'achievements');
     }
 
     /**
@@ -62,13 +61,13 @@ class GroupsController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'project_id' => ['sometimes', 'required', 'exists:projects,id'],
-        ]);
-
+        $request->validate(Group::rules());
         $group->update($request->all());
-        return Response::json($group);
+
+        return response()->json([
+            'message' => 'Group updated successfully',
+            'project' => $group
+        ]);
     }
 
     /**
@@ -80,15 +79,26 @@ class GroupsController extends Controller
     public function destroy($id)
     {
         Group::destroy($id);
+
         return response()->json([
-            'message' => 'Deleted Successfuly.'
-        ], 200);
+            'message' => 'Group deleted successfully',
+        ]);
     }
 
-    public function destroyTrainees(Request $request){
+    public function destroyTrainees(Request $request)
+    {
         DB::table('group_trainee')
-        ->where('trainee_id', $request->trainee_id)
-        ->where('group_id', $request->group_id)
-        ->delete();
+            ->where('trainee_id', $request->trainee_id)
+            ->where('group_id', $request->group_id)
+            ->delete();
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new TraineesImport($request), $request->file('trainee'));
+
+        return response()->json([
+            'message' => 'ok'
+        ]);
     }
 }

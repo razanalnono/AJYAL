@@ -8,7 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
     use HasFactory;
-    protected $fillable=['bio','vision','goals','logo'];
-
-    
+    protected $fillable = ['bio', 'vision', 'goals', 'logo'];
 }
