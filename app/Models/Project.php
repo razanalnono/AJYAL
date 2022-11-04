@@ -40,4 +40,8 @@ class Project extends Model
     {
         return $this->hasMany(Group::class, 'project_id', 'id');
     }
+    public function financiers()
+    {
+        return $this->belongsToMany(Financier::class,'financier_projects', 'financier_id', 'project_id', 'id', 'id');
+    }
 }

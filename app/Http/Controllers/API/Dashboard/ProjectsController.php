@@ -45,7 +45,7 @@ class ProjectsController extends Controller
      */
     public function show(Project $project)
     {
-        return $project->load('groups');
+        return $project->load(['groups','financiers']);
     }
 
     /**

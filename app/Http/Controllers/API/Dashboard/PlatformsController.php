@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\API\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\Course;
+use App\Models\Platform;
 use Illuminate\Http\Request;
 
-class CourseController extends Controller
+class PlatformsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +15,9 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        $courses = Course::with(['group', 'trainer', 'presence_absence'])
-        ->filter($request->query())->get();
-
-        return $courses;
+        $platform = Platform::with(['achievements'])->filter($request->query())->get();
+        
+        return $platform;
     }
 
     /**
@@ -29,11 +28,11 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(Course::rules());
-        Course::create($request->all());
+        $request->validate(Platform::rules());
+        $rate = Platform::create($request->all());
 
         return response()->json([
-            'message'=>'Course created successfully'
+            'message' => 'Platform added successfully'
         ]);
     }
 
@@ -43,10 +42,9 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Course $course)
+    public function show(Platform $platform)
     {
-        return $course->load('group', 'trainer', 'presence_absence');
-        
+        return $platform->load(['achievements']);
     }
 
     /**
@@ -56,13 +54,13 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Course $course)
+    public function update(Request $request, Platform $platform)
     {
-        $request->validate(Course::rules());
-        $course->update($request->all());
+        $request->validate(Platform::rules());
+        $platform->update($request->all());
 
         return response()->json([
-            'message' => 'Course updated successfully'
+            'message' => 'Platform updated successfully'
         ]);
     }
 
@@ -72,12 +70,12 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Course $course)
+    public function destroy(Platform $platform)
     {
-        $course->delete();
+        $platform->delete();
 
         return response()->json([
-            'message'=>'Course Deleted Successfully'
+            'message' => 'Platform deleted successfully'
         ]);
     }
 }

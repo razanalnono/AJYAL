@@ -12,16 +12,19 @@ use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\Dashboard\AchievementsController;
 use App\Http\Controllers\API\Dashboard\AttendencesController;
 use App\Http\Controllers\API\Dashboard\CitiesController;
+use App\Http\Controllers\API\Dashboard\CourseController;
+use App\Http\Controllers\API\Dashboard\FinanciersController;
+use App\Http\Controllers\API\Dashboard\FinanciersProjectsController;
 use App\Http\Controllers\API\Dashboard\GroupsController;
+use App\Http\Controllers\API\Dashboard\PlatformsController;
 use App\Http\Controllers\API\Dashboard\PresenceAbsencesController;
 use App\Http\Controllers\API\Dashboard\ProjectsController;
+use App\Http\Controllers\API\Dashboard\RateController;
 use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\InfoController;
 use App\Http\Controllers\API\ProgramsController;
 use App\Http\Controllers\API\SocialController;
 use App\Http\Controllers\OurWorkController;
-use App\Models\Admin;
-use App\Models\Course;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -79,6 +82,7 @@ Route::apiResource('/groups', GroupsController::class);
 
 Route::post('/deleteTraineeFromGroup', [GroupsController::class, 'destroyTrainees']);
 Route::apiResource('/achievements', AchievementsController::class);
+Route::post('/achievements/{achievement}', [AchievementsController::class, 'update']);
 
 Route::apiResource('/attendences', AttendencesController::class);
 
@@ -93,6 +97,11 @@ Route::apiResource('/trainees', TraineeController::class);
 Route::post('/trainees/{trainee}', [TraineeController::class,'update']);
 Route::post('/import-excel', [GroupsController::class,'import']);
 Route::apiResource('rates', RateController::class);
+Route::apiResource('platforms', PlatformsController::class);
+Route::apiResource('financiers', FinanciersController::class);
+Route::post('/financiers/{financier}', [FinanciersController::class, 'update']);
+Route::get('show-avaliable-financiers',[FinanciersProjectsController::class,'showFinanciers']);
+Route::post('add-financiers',[FinanciersProjectsController::class,'store']);
 
 
 

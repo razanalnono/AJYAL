@@ -19,8 +19,10 @@ class GroupsController extends Controller
      */
     public function index(Request $request)
     {
-        $groups = Group::with('project:id,name', 'trainees', 'course', 'achievements')->orderBy('end_date', 'DESC')
-        ->filter($request->query())->paginate();
+        $groups = Group::with('project:id,name', 'trainees', 'course', 'achievements')
+        ->orderBy('end_date', 'DESC')
+        ->filter($request->query())->get();
+        
         return $groups;
     }
 

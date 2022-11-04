@@ -56,6 +56,6 @@ class Group extends Model
 
     public function achievements()
     {
-        return $this->hasMany(Achievements::class, 'trainee_id', 'id');
+        return $this->hasMany(Achievement::class, 'trainee_id', 'id');
     }
 }

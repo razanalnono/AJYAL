@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('groups', function (Blueprint $table) {
+        Schema::table('courses', function (Blueprint $table) {
             $table->text("description")->nullable();
-            $table->string('hour_count')->default(0);
-            $table->date('start_date')->nullable();
-            $table->date('end_date')->nullable();
+            $table->integer('hour_count')->default(0);
             $table->enum('status', ['لاغي', 'مكتمل', 'قيد التنفيذ'])->default('قيد التنفيذ');
         });
     }
@@ -29,11 +27,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('groups', function (Blueprint $table) {
+        Schema::table('courses', function (Blueprint $table) {
             $table->dropColumn('description');
             $table->dropColumn('hour_count');
-            $table->dropColumn('start_date');
-            $table->dropColumn('end_date');
             $table->dropColumn('status');
         });
     }
