@@ -20,6 +20,7 @@ class Password extends Mailable
     {
         //
         $this->password=$password;
+        // $this->type=$type; 
     }
 
     /**

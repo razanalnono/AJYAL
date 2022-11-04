@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class AdminSeeder extends Seeder
@@ -24,10 +25,14 @@ class AdminSeeder extends Seeder
         $adminUser->avatar='';
         $adminUser->email = 'superadmin@ajyal.com';
         $adminUser->mobile = '0597750952';
-        $adminUser->password = \Illuminate\Support\Facades\Hash::make('password');
+       // $adminUser->password = \Illuminate\Support\Facades\Hash::make('password');
         $adminUser->save();
-        $role = Role::updateOrCreate(['name' => 'Super-Admin',
-         'guard_name' => 'admin']);
+        
+        $role = Role::create(['name' => 'admin']);
+        $permissions = Permission::pluck('id', 'id')->all();
+        $role->syncPermissions($permissions);
         $adminUser->assignRole($role);
+
+        
         }
 }

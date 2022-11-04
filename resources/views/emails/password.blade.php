@@ -120,8 +120,15 @@
             style="width: 100%; background-color: #FFF; max-width: 600px; Margin: 0 auto; padding-bottom: 40px;">
 
             <table class="main-table-first header"
-                style="border-spacing: 0; color: #0D0D0D; width: 100%; Margin: 0 auto; background-image: url(https://i.ibb.co/Gc4XFMt/bg.png); background-repeat: no-repeat; background-size: cover; min-height: 52px; font-family: 'Tajawal', 'system-ui', sans-serif;"
-                width="100%" background="url(https://i.ibb.co/Gc4XFMt/bg.png)">
+                style="border-spacing: 0; color: #0D0D0D; width: 100%; Margin: 0 auto; ; background-repeat: no-repeat; background-size: cover; min-height: 52px; font-family: 'Tajawal', 'system-ui', sans-serif;"
+
+                width="100%" background="#">
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
+                    <path fill="#b30000" fill-opacity="1"
+                        d="M0,256L48,256C96,256,192,256,288,261.3C384,267,480,277,576,277.3C672,277,768,267,864,218.7C960,171,1056,85,1152,90.7C1248,96,1344,192,1392,240L1440,288L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z">
+                    </path>
+                </svg>
                 <tr>
                     <td class="two-column" style="text-align: center; font-size: 0; padding: 5px 0 5px 0;"
                         align="center">
@@ -175,7 +182,7 @@
                                         </div>
                                         <div class="content-inner">
                                             <p>كلمة المرور الخاصة بحسابك في مؤسسة أجيال</p>
-                                            <a href="{{$password}}" class="link" target="_blank"
+                                            <a href="#" class="link" target="_blank"
                                                 style="text-decoration: none; color: #567CE5; font-size: 16px; font-weight: 500; display: inline-block; margin: 16px 0 10px;">
                                                 {{$password}}
                                             </a>
@@ -185,7 +192,7 @@
                                             <p style="margin: 0; font-size: 15px; color: #0D0D0D;">شكرا لك,</p>
                                             <h4
                                                 style="margin: 0; color: #0D0D0D; font-size: 15px; font-weight: normal;">
-                                                نتمنى لك وقتاً سعيداً ، مؤسسة أجيال المجتمعية </h4>
+                                                 مؤسسة أجيال المجتمعية </h4>
                                         </div>
                                     </div>
                                 </td>
