@@ -59,31 +59,35 @@ Route::group(['prefix' => '/dashboard'], function () {
     Route::post('/trainer/{trainer}', [TrainerController::class,'update']);
 
 });
-Route::middleware('auth:sanctum')->apiResource('/courses',CourseController::class);
+Route::middleware('auth:sanctum')->apiResource('/courses',CourseController::class)->except('index');
 
-Route::apiResource('/news', NewsController::class);
-Route::post('/news/{news}', [NewsController::class, 'update']);
+Route::middleware('auth:sanctum')->apiResource('/news', NewsController::class)->except('index');
+Route::middleware('auth:sanctum')->post('/news/{news}', [NewsController::class, 'update']);
 
 
-Route::apiResource('/page', PageController::class);
-Route::post('/page/{page}', [PageController::class, 'update']);
+Route::middleware('auth:sanctum')->apiResource('/page', PageController::class)->except('index');
+Route::middleware('auth:sanctum')->post('/page/{page}', [PageController::class, 'update']);
 
 Route::apiResource('/ourWork',OurWorkController::class);
 Route::post('/ourWork/{work}',[OurWorkController::class,'update']);
 
-Route::apiResource('/contact', ContactController::class);
-Route::apiResource('/info', InfoController::class);
-Route::apiResource('/programs', ProgramsController::class);
-Route::post('/programs/{program}', [ProgramsController::class, 'update']);
-Route::apiResource('/social', SocialController::class);
-Route::post('/social/{social}', [SocialController::class, 'update']);
-Route::apiResource('/projects', ProjectsController::class);
-Route::apiResource('/groups', GroupsController::class);
+Route::middleware('auth:sanctum')->apiResource('/contact', ContactController::class)->except('index');
+Route::middleware('auth:sanctum')->apiResource('/info', InfoController::class)->except('index');
+
+Route::middleware('auth:sanctum')->apiResource('/programs', ProgramsController::class)->except('index');
+Route::middleware('auth:sanctum')->post('/programs/{program}', [ProgramsController::class, 'update']);
+
+Route::middleware('auth:sanctum')->apiResource('/social', SocialController::class)->except('index');
+Route::middleware('auth:sanctum')->post('/social/{social}', [SocialController::class, 'update']);
+
+Route::middleware('auth:sanctum')->apiResource('/projects', ProjectsController::class)->except('index');
+
+Route::middleware('auth:sanctum')->apiResource('/groups', GroupsController::class)->except('index');
 
 Route::get('LandingPage',[LandingPageController::class,'index']);
 
-Route::post('/deleteTraineeFromGroup', [GroupsController::class, 'destroyTrainees']);
-Route::apiResource('/achievements', AchievementsController::class);
-Route::apiResource('/newsletter',NewsletterController::class);
+Route::middleware('auth:sanctum')->post('/deleteTraineeFromGroup', [GroupsController::class, 'destroyTrainees']);
+Route::middleware('auth:sanctum')->apiResource('/achievements', AchievementsController::class)->except('index');
+Route::middleware('auth:sanctum')->apiResource('/newsletter',NewsletterController::class)->except('index');
 
 Route::post('/send_notification', [GlobalNotificationController::class, 'send']);
