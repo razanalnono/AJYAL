@@ -13,9 +13,10 @@ class RateController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $rates = Rate::with(['trinee', 'course']);
+        $rates = Rate::with(['trainee', 'course'])->filter($request->query())->get();
+
         return $rates;
     }
 
@@ -27,9 +28,11 @@ class RateController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate(Rate::rules());
         $rate = Rate::create($request->all());
+
         return response()->json([
-            'message' => 'Created'
+            'message' => 'Rate added successfully'
         ]);
     }
 
@@ -39,9 +42,9 @@ class RateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Rate $rate)
     {
-        //
+        return $rate->load(['trainee', 'course']);
     }
 
     /**
@@ -51,9 +54,14 @@ class RateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Rate $rate)
     {
-        //
+        $request->validate(Rate::rules());
+        $rate->update($request->all());
+
+        return response()->json([
+            'message' => 'Rate updated successfully'
+        ]);
     }
 
     /**
@@ -62,8 +70,12 @@ class RateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Rate $rate)
     {
-        //
+        $rate->delete();
+
+        return response()->json([
+            'message' => 'Rate deleted successfully'
+        ]);
     }
 }

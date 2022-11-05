@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\API\Dashboard;
 
-
 use App\Http\Controllers\Controller;
-use App\Models\Project;
+use App\Models\Platform;
 use Illuminate\Http\Request;
 
-class ProjectsController extends Controller
+class PlatformsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +15,9 @@ class ProjectsController extends Controller
      */
     public function index(Request $request)
     {
-        $projects = Project::with('groups')->orderBy('end_date', 'DESC')->filter($request->query())->paginate();
-        return $projects;
+        $platform = Platform::with(['achievements'])->filter($request->query())->get();
+
+        return $platform;
     }
 
     /**
@@ -28,12 +28,11 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(Project::rules());
-        $project = Project::create($request->all());
+        $request->validate(Platform::rules());
+        $rate = Platform::create($request->all());
 
         return response()->json([
-            'message' => 'Project created successfully',
-            'project' => $project
+            'message' => 'Platform added successfully'
         ]);
     }
 
@@ -43,9 +42,9 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Project $project)
+    public function show(Platform $platform)
     {
-        return $project->load(['groups', 'financiers']);
+        return $platform->load(['achievements']);
     }
 
     /**
@@ -55,14 +54,13 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request, Platform $platform)
     {
-        $request->validate(Project::rules());
-        $project->update($request->all());
+        $request->validate(Platform::rules());
+        $platform->update($request->all());
 
         return response()->json([
-            'message' => 'Project updated successfully',
-            'project' => $project
+            'message' => 'Platform updated successfully'
         ]);
     }
 
@@ -72,12 +70,12 @@ class ProjectsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Platform $platform)
     {
-        Project::destroy($id);
+        $platform->delete();
 
         return response()->json([
-            'message' => 'Project deleted successfully',
+            'message' => 'Platform deleted successfully'
         ]);
     }
 }

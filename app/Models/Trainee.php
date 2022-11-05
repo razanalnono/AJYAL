@@ -13,49 +13,34 @@ class Trainee extends User
     use HasFactory, HasApiTokens;
     protected $fillable = [
         'firstName', 'lastName',
-        'nationalID', 'gender',
+        'national_id', 'gender',
         'mobile', 'avatar',
-        'email', 'password',
-        'carriagePrice', 'address',
-        'city_id', 'activation_code'
+        'email',
+        'carriage_price', 'address',
+        'city_id', 'activation_code',
+        'status',
     ];
 
     public function scopeFilter(Builder $builder, $filters)
     {
         $builder->when($filters['trainee_name'] ?? false, function ($builder, $value) {
             $builder->where('firstName', 'Like', '%' . $value . '%')
-            ->orWhere('lastName', 'Like', '%' . $value . '%');
+                ->orWhere('lastName', 'Like', '%' . $value . '%');
         });
-        // $builder->when($filters['carriagePrice'] ?? false, function ($builder, $value) {
-        //     $builder->where('carriagePrice', $value);
-        // });
-        // $builder->when($filters['trainee_id'] ?? false, function ($builder, $value) {
-        //     $builder->where('trainee_id', $value);
-        // });
-        // $builder->when($filters['status'] ?? false, function ($builder, $value) {
-        //     $builder->where('status', $value);
-        // });
-        // $builder->when($filters['trainee_name'] ?? false, function ($builder, $value) {
-        //     $builder->whereHas('trainee', function ($query) use ($value) {
-        //         $query->where('firstName', 'Like', '%' . $value . '%')
-        //             ->orWhere('lastName', 'Like', '%' . $value . '%');
-        //     });
-        // });
     }
 
     public static function rules($id = 0)
     {
         return [
-            'firstName' => ['required', 'string', 'max:255', 'min:3'],
-            'lastName' => ['required', 'string', 'max:255', 'min:3'],
-            'email' => ['required', "unique:trainees,email,$id"],
-            // 'password' => ['required', 'min:3'],
-            'nationalID' => ['required', 'numeric', "unique:trainees,nationalID,$id"],
-            'gender' => ['required', 'in:female,male'],
-            'mobile' => ['required', 'string', "unique:trainees,mobile,$id"],
-            'avatar' => ['image', 'max:1048576'],
+            'firstName' => ['required', 'string', 'max:255'],
+            'lastName' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', "unique:trainees,email,$id"],
+            'national_id' => ['required', 'string', "unique:trainees,national_id,$id"],
+            'gender' => ['required', 'in:أنثى,ذكر'],
+            'mobile' => ['required', 'string', 'max:255', "unique:trainees,mobile,$id"],
+            'avatar' => ['nullable', 'image', 'mimes:jpeg,png,jpg,svg'],
             'groups' => ['required'],
-            'carriagePrice' => ['nullable', 'numeric'],
+            'carriage_price' => ['nullable', 'numeric'],
             'address' => ['nullable', 'string'],
             'city_id' => ['nullable', 'int', 'exists:cities,id'],
         ];
@@ -67,7 +52,7 @@ class Trainee extends User
     }
     public function achievements()
     {
-        return $this->hasMany(Achievements::class, 'trainee_id', 'id');
+        return $this->hasMany(Achievement::class, 'trainee_id', 'id');
     }
     public function city()
     {

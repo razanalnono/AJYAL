@@ -4,8 +4,6 @@ namespace App\Http\Controllers\API\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
-use App\Models\Trainee;
-use App\Models\Trainer;
 use Illuminate\Http\Request;
 
 class CourseController extends Controller
@@ -17,13 +15,10 @@ class CourseController extends Controller
      */
     public function index(Request $request)
     {
-        //
+        $courses = Course::with(['group', 'trainer', 'presence_absence'])
+            ->filter($request->query())->get();
 
-       $courses=Course::query()->select('name', 'start_date','end_date','trainer_id')
-            ->with(['trainer' => function ($query) {
-            $query->select('id','firstName','lastName');
-            }])->get();
-            return $courses;
+        return $courses;
     }
 
     /**
@@ -34,16 +29,11 @@ class CourseController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $request->validate([
-            'name'=>'required',
-        
-            'start_date'=>['required'],
-            'end_date'=>['required','after:'.$request->start_date],
-        ]);
-        Course::create($request->post());
+        $request->validate(Course::rules());
+        Course::create($request->all());
+
         return response()->json([
-            'message'=>'Course Created Successfully'
+            'message' => 'Course created successfully'
         ]);
     }
 
@@ -53,9 +43,9 @@ class CourseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Course $course)
     {
-        //
+        return $course->load('group', 'trainer', 'presence_absence');
     }
 
     /**
@@ -67,10 +57,11 @@ class CourseController extends Controller
      */
     public function update(Request $request, Course $course)
     {
-        //
+        $request->validate(Course::rules());
         $course->update($request->all());
+
         return response()->json([
-            'message' => 'Updated Successfully'
+            'message' => 'Course updated successfully'
         ]);
     }
 
@@ -82,10 +73,10 @@ class CourseController extends Controller
      */
     public function destroy(Course $course)
     {
-        //
         $course->delete();
+
         return response()->json([
-            'message'=>'Course Deleted Successfully'
+            'message' => 'Course Deleted Successfully'
         ]);
     }
 }

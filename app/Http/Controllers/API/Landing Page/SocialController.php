@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api\LandingPage;
 
 use App\Http\Controllers\Controller;
 use App\Models\Social;
-use App\Rules\CheckIfFavicon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
@@ -19,6 +18,7 @@ class SocialController extends Controller
     public function index()
     {
         $social = Social::all();
+
         return $social;
     }
 
@@ -30,27 +30,12 @@ class SocialController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['nullable', 'string', 'max:255'],
-            'icon' => ['image', 'max:1048576', 'dimensions:min_width=100,min_height=100'],
-            'url' => ['required', 'url'],
-        ]);
-
+        $request->validate(Social::rules());
         $data = $request->except('icon');
         $data['icon'] = $this->uploadImage($request);
-        $social = Social::create( $data );
-        return Response::json($social, 201);
-    }
+        $social = Social::create($data);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return Response::json($social, 201);
     }
 
     /**
@@ -62,12 +47,7 @@ class SocialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => ['nullable', 'string', 'max:255'],
-            'icon' => ['image', 'max:1048576', 'dimensions:min_width=100,min_height=100'],
-            'url' => ['required', 'url'],
-        ]);
-
+        $request->validate(Social::rules());
         $social = Social::findOrFail($id);
         $old_icon = $social->icon;
         $data = $request->except('icon');
@@ -93,7 +73,7 @@ class SocialController extends Controller
     {
         $social = Social::findOrFail($id);
         if ($social->icon) {
-                Storage::disk('public')->delete($social->icon);
+            Storage::disk('public')->delete($social->icon);
         }
         Social::destroy($id);
 
@@ -102,7 +82,8 @@ class SocialController extends Controller
         ];
     }
 
-    protected function uploadImage(Request $request) {
+    protected function uploadImage(Request $request)
+    {
         if (!$request->hasFile('icon')) {
             return;
         }

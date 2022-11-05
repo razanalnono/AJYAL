@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\LandingPage;
 
+use App\Http\Controllers\Controller;
 use App\Models\News;
 use App\Models\Image;
 use Illuminate\Http\Request;
@@ -16,7 +17,6 @@ class NewsController extends Controller
      */
     public function index()
     {
-        //
         return News::with('images')->paginate();
     }
 

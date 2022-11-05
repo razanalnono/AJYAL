@@ -28,7 +28,7 @@ class CitiesController extends Controller
     public function store(Request $request)
     {
         $request->validate(city::rules());
-        $city = city::create( $request->all() );
+        $city = city::create($request->all());
         return response()->json([
             'message' => 'City created successfully',
         ]);
@@ -42,7 +42,7 @@ class CitiesController extends Controller
      */
     public function show(city $city)
     {
-         return $city->load('trainees:id,firstName,lastName');
+        return $city->load('trainees:id,firstName,lastName');
     }
 
     /**
@@ -55,7 +55,7 @@ class CitiesController extends Controller
     public function update(Request $request, city $city)
     {
         $request->validate(city::rules());
-        $city->update( $request->all() );
+        $city->update($request->all());
         return response()->json([
             'message' => 'City updated successfully',
         ]);

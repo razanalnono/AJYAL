@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->foreignId('city_id')->nullable()->constrained('cities')->nullOnDelete();
+            $table->float('carriage_price')->nullable();
+            $table->string('address')->nullable();
+            $table->enum('status', ['ملتحق', 'منتهي'])->default('ملتحق');
         });
     }
 
@@ -26,7 +28,9 @@ return new class extends Migration
     public function down()
     {
         Schema::table('trainees', function (Blueprint $table) {
-            $table->dropColumn('city_id');
+            $table->dropColumn('carriage_price');
+            $table->dropColumn('address');
+            $table->dropColumn('status');
         });
     }
 };

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\API\Dashboard;
 
 use App\Http\Controllers\Controller;
-use App\Models\Achievements;
+use App\Models\Achievement;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 
 class AchievementsController extends Controller
 {
@@ -16,7 +16,7 @@ class AchievementsController extends Controller
      */
     public function index()
     {
-        $achievements = Achievements::with('trainee:id,firstName,lastName', 'group:id,name')
+        $achievements = Achievement::with('trainee:id,firstName,lastName', 'group:id,name')
             ->paginate();
 
         return $achievements;
@@ -30,16 +30,15 @@ class AchievementsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'platform' => ['in:مستقل,upwork,freelancer,خمسات,other'],
-            'other' => ["required_if:platform,==,other", 'nullable', 'string', 'max:255'],
-            'income' => ['required', 'numeric', 'min:0'],
-            'group_id' => ['required', 'exists:groups,id'],
-            'trainee_id' => ['required', 'exists:trainees,id'],
-        ]);
+        $request->validate(Achievement::rules());
 
-        $achievement = Achievements::create($request->all());
-        return Response::json($achievement, 201);
+        $data = $request->except('attachment');
+        $data['attachment'] = $this->uploadAttachment($request);
+        $achievement = Achievement::create($data);
+
+        return response()->json([
+            'message' => 'Achievement added successfully'
+        ]);
     }
 
     /**
@@ -48,7 +47,7 @@ class AchievementsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Achievements $achievement)
+    public function show(Achievement $achievement)
     {
         return $achievement->load('trainee:id,firstName,lastName', 'group:id,name');
     }
@@ -60,18 +59,25 @@ class AchievementsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Achievements $achievement)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'platform' => ['in:مستقل,upwork,freelancer,خمسات,other'],
-            'other' => ["required_if:platform,==,other",'nullable', 'string', 'max:255'],
-            'income' => ['sometimes', 'required', 'numeric', 'min:0'],
-            'group_id' => ['sometimes', 'required', 'exists:groups,id'],
-            'trainee_id' => ['sometimes', 'required', 'exists:trainees,id'],
-        ]);
+        $request->validate(Achievement::rules());
 
-        $achievement->update($request->all());
-        return Response::json($achievement);
+        $achievement = Achievement::findOrFail($id);
+        $old_attachment = $achievement->attachment;
+        $data = $request->except('attachment');
+        $new_attachment = $this->uploadAttachment($request);
+        if ($new_attachment) {
+            $data['attachment'] = $new_attachment;
+        }
+        $achievement->update($data);
+        if ($old_attachment && $new_attachment) {
+            Storage::disk('public')->delete($old_attachment);
+        }
+
+        return response()->json([
+            'message' => 'Achievement updated successfully'
+        ]);
     }
 
     /**
@@ -82,10 +88,26 @@ class AchievementsController extends Controller
      */
     public function destroy($id)
     {
-        Achievements::destroy($id);
+        $achievement = Achievement::findOrFail($id);
+        $achievement->delete();
+        if ($achievement->attachment) {
+            Storage::disk('public')->delete($achievement->attachment);
+        }
 
         return response()->json([
-            'message' => 'Deleted Successfuly.'
-        ], 200);
+            'message' => 'Achievement deleted successfully'
+        ]);
+    }
+
+    protected function uploadAttachment(Request $request)
+    {
+        if (!$request->hasFile('attachment')) {
+            return;
+        }
+        $file = $request->file('attachment');
+        $path = $file->store('uploads', [
+            'disk' => 'public'
+        ]);
+        return $path;
     }
 }

@@ -15,17 +15,19 @@ use Illuminate\Support\Facades\Response;
 class AdminController extends Controller
 {
     //
-    public function index(){
-        return Admin::select('firstName','lastName','gender','avatar','email')->get();
+    public function index()
+    {
+        return Admin::select('firstName', 'lastName', 'gender', 'avatar', 'email')->get();
     }
 
-    public function store(Request $request,Admin $admin){
-        
+    public function store(Request $request, Admin $admin)
+    {
+
         $email = $request->email;
         $admin = Admin::where('email', $email)->first();
 
         $password = Random::generate('5');
-        
+
 
         // $hashed = Hash::make($password);
         // $trainee->password = $hashed;
@@ -43,27 +45,28 @@ class AdminController extends Controller
         return response()->json([
             'message' => 'Admin Created'
         ]);
-        
     }
 
-    public function show($id){
+    public function show($id)
+    {
     }
 
-    public function update(Request $request,Admin $admin){
-        $old_image=$admin->avatar;
+    public function update(Request $request, Admin $admin)
+    {
+        $old_image = $admin->avatar;
         $password = Random::generate('5');
         $data['password'] = Hash::make($password);
 
         $data = $request->except('avatar');
-        $new_image=$this->uploadImage($request);
-        if($new_image){
-            $data['avatar']=$new_image;
+        $new_image = $this->uploadImage($request);
+        if ($new_image) {
+            $data['avatar'] = $new_image;
         }
 
         $admin->update($data);
         Mail::to($admin->email)->send(new Password($password));
 
-        if($old_image && $new_image){
+        if ($old_image && $new_image) {
             Storage::disk('public')->delete($old_image);
         }
 
@@ -73,7 +76,8 @@ class AdminController extends Controller
     }
 
 
-    public function destroy(Admin $admin){
+    public function destroy(Admin $admin)
+    {
 
         $admin->delete();
         return response()->json([
