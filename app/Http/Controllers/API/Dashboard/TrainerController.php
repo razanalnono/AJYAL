@@ -18,7 +18,7 @@ class TrainerController extends Controller
     public function index()
     {
 
-        //
+        
         $trainer = Course::query()->select('name','trainer_id')
         ->with(['trainer:id,firstName,lastName,gender,avatar,email'])->get();
         return $trainer;
