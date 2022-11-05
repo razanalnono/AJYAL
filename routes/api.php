@@ -50,14 +50,13 @@ Route::post('/login/{type}', [AccessTokensController::class, 'login']);
 
 Route::group(['prefix' => '/dashboard'], function () {
     Route::apiResource('/admin', AdminController::class);
-    Route::post('/admin/{admin}', [AdminController::class,'update']);
+    Route::post('/admin/{admin}', [AdminController::class, 'update']);
 
     // Route::apiResource('/trainee', TraineeController::class);
     // Route::post('/trainee/{trainee}', [TraineeController::class,'update']);
 
     Route::apiResource('/trainer', TrainerController::class);
-    Route::post('/trainer/{trainer}', [TrainerController::class,'update']);
-
+    Route::post('/trainer/{trainer}', [TrainerController::class, 'update']);
 });
 Route::apiResource('courses', CourseController::class);
 
@@ -68,8 +67,8 @@ Route::post('/news/{news}', [NewsController::class, 'update']);
 Route::apiResource('/page', PageController::class);
 Route::post('/page/{page}', [PageController::class, 'update']);
 
-Route::apiResource('/ourWork',OurWorkController::class);
-Route::post('/ourWork/{work}',[OurWorkController::class,'update']);
+Route::apiResource('/ourWork', OurWorkController::class);
+Route::post('/ourWork/{work}', [OurWorkController::class, 'update']);
 
 Route::apiResource('/contact', ContactController::class);
 Route::apiResource('/info', InfoController::class);
@@ -87,21 +86,18 @@ Route::post('/achievements/{achievement}', [AchievementsController::class, 'upda
 Route::apiResource('/attendences', AttendencesController::class);
 
 
-Route::get('get-presence_absence-for-course',[PresenceAbsencesController::class, 'index']);
-Route::post('store-presence_absence-for-course',[PresenceAbsencesController::class, 'store']);
-Route::put('update-presence_absence-for-course/{id}',[PresenceAbsencesController::class, 'update']);
+Route::get('get-presence_absence-for-course', [PresenceAbsencesController::class, 'index']);
+Route::post('store-presence_absence-for-course', [PresenceAbsencesController::class, 'store']);
+Route::put('update-presence_absence-for-course/{id}', [PresenceAbsencesController::class, 'update']);
 
 Route::apiResource('/cities', CitiesController::class);
 
 Route::apiResource('/trainees', TraineeController::class);
-Route::post('/trainees/{trainee}', [TraineeController::class,'update']);
-Route::post('/import-excel', [GroupsController::class,'import']);
+Route::post('/trainees/{trainee}', [TraineeController::class, 'update']);
+Route::post('/import-excel', [GroupsController::class, 'import']);
 Route::apiResource('rates', RateController::class);
 Route::apiResource('platforms', PlatformsController::class);
 Route::apiResource('financiers', FinanciersController::class);
 Route::post('/financiers/{financier}', [FinanciersController::class, 'update']);
-Route::get('show-avaliable-financiers',[FinanciersProjectsController::class,'showFinanciers']);
-Route::post('add-financiers',[FinanciersProjectsController::class,'store']);
-
-
-
+Route::get('show-avaliable-financiers', [FinanciersProjectsController::class, 'showFinanciers']);
+Route::post('add-financiers', [FinanciersProjectsController::class, 'store']);
