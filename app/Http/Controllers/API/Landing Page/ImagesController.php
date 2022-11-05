@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\LandingPage;
 
-use App\Models\Images;
+use App\Http\Controllers\Controller;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -14,16 +15,15 @@ class ImagesController extends Controller
     {
 
         $data['images'] = $this->uploadImage($request);
-        $images = Images::create($data);
-        return response()->json(['message'=>'Image Added Successfully']);
-
+        $images = Image::create($data);
+        return response()->json(['message' => 'Image Added Successfully']);
     }
 
-    public function update(Request $request, Images $images)
+    public function update(Request $request, Image $images)
     {
         $old_image = $images->images;
         $new_image = $this->uploadImage($request);
-        $data=[];
+        $data = [];
         if ($new_image) {
             $data['images'] = $new_image;
         }
@@ -40,7 +40,7 @@ class ImagesController extends Controller
     }
 
 
-    public function destroy(Images $images)
+    public function destroy(Image $images)
     {
         $images->delete();
         return response()->json([

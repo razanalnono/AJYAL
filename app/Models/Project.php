@@ -16,17 +16,18 @@ class Project extends Model
         'status'
     ];
 
-    public function scopeFilter (Builder $builder, $filters) 
+    public function scopeFilter(Builder $builder, $filters)
     {
-        $builder->when($filters['name'] ?? false, function($builder, $value){
+        $builder->when($filters['name'] ?? false, function ($builder, $value) {
             $builder->where('name', 'LIKE', "%{$value}%");
         });
-        $builder->when($filters['status'] ?? false, function($builder, $value){
+        $builder->when($filters['status'] ?? false, function ($builder, $value) {
             $builder->where('status', 'LIKE', $value);
         });
     }
 
-    public static function rules($id = 0) {
+    public static function rules($id = 0)
+    {
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['string', 'nullable'],
@@ -42,6 +43,6 @@ class Project extends Model
     }
     public function financiers()
     {
-        return $this->belongsToMany(Financier::class,'financier_projects', 'financier_id', 'project_id', 'id', 'id');
+        return $this->belongsToMany(Financier::class, 'financier_projects', 'financier_id', 'project_id', 'id', 'id');
     }
 }

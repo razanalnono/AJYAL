@@ -16,7 +16,7 @@ class CourseController extends Controller
     public function index(Request $request)
     {
         $courses = Course::with(['group', 'trainer', 'presence_absence'])
-        ->filter($request->query())->get();
+            ->filter($request->query())->get();
 
         return $courses;
     }
@@ -33,7 +33,7 @@ class CourseController extends Controller
         Course::create($request->all());
 
         return response()->json([
-            'message'=>'Course created successfully'
+            'message' => 'Course created successfully'
         ]);
     }
 
@@ -46,7 +46,6 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         return $course->load('group', 'trainer', 'presence_absence');
-        
     }
 
     /**
@@ -77,7 +76,7 @@ class CourseController extends Controller
         $course->delete();
 
         return response()->json([
-            'message'=>'Course Deleted Successfully'
+            'message' => 'Course Deleted Successfully'
         ]);
     }
 }

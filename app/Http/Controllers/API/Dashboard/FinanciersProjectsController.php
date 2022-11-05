@@ -23,12 +23,12 @@ class FinanciersProjectsController extends Controller
 
     public function store(Request $request)
     {
-       
+
         $request->validate([
             'project_id' => 'required|integer|exists:projects,id',
             'financier_id' => 'required|integer|exists:financiers,id',
         ]);
-        
+
         $financierProject = FinancierProject::firstOrCreate([
             'project_id' => $request->input('project_id'),
             'financier_id' => $request->input('financier_id'),
@@ -37,6 +37,5 @@ class FinanciersProjectsController extends Controller
         return response()->json([
             'message' => 'Financier added successfully to the project'
         ]);
-
     }
 }

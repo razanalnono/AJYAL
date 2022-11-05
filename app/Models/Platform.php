@@ -24,7 +24,7 @@ class Platform extends Model
     public static function rules($id = 0)
     {
         return [
-            'name'=>'required|string',
+            'name' => 'required|string',
         ];
     }
 

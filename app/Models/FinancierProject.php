@@ -10,5 +10,5 @@ class FinancierProject extends Model
     use HasFactory;
 
     protected $table = 'financier_projects';
-    protected $fillable = ['project_id','financier_id'];
+    protected $fillable = ['project_id', 'financier_id'];
 }

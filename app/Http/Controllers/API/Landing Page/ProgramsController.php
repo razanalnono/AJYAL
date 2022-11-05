@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api\LandingPage;
 
 use App\Http\Controllers\Controller;
 use App\Models\Program;
@@ -18,8 +18,8 @@ class ProgramsController extends Controller
     public function index()
     {
         $programs = Program::all();
+
         return $programs;
-        
     }
 
     /**
@@ -30,29 +30,12 @@ class ProgramsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:255'],
-            'image' => ['required', 'image', 'max:1048576', 'dimensions:min_width=100,min_height=100'],
-            'start_ad' => ['nullable', 'before:end_ad'],
-            'end_ad' => ['nullable'],
-        ]);
+        $request->validate(Program::rules());
 
         $data = $request->except('image');
         $data['image'] = $this->uploadImage($request);
-        $program = Program::create( $data );
+        $program = Program::create($data);
         return Response::json($program, 201);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -64,13 +47,7 @@ class ProgramsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:255'],
-            'image' => ['image', 'max:1048576', 'dimensions:min_width=100,min_height=100'],
-            'start_ad' => ['nullable', 'before:end_ad'],
-            'end_ad' => ['nullable'],
-        ]);
+        $request->validate(Program::rules());
         $program = Program::findOrFail($id);
         $old_image = $program->image;
         $data = $request->except('image');
@@ -84,7 +61,6 @@ class ProgramsController extends Controller
         }
 
         return Response::json($program);
-
     }
 
     /**
@@ -98,14 +74,16 @@ class ProgramsController extends Controller
         $program = Program::findOrFail($id);
         $program->delete();
         if ($program->image) {
-                Storage::disk('public')->delete($program->image);
+            Storage::disk('public')->delete($program->image);
         }
+
         return [
             'message' => 'Deleted Successfully.',
         ];
     }
 
-    protected function uploadImage(Request $request) {
+    protected function uploadImage(Request $request)
+    {
         if (!$request->hasFile('image')) {
             return;
         }

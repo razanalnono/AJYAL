@@ -74,7 +74,7 @@ class AchievementsController extends Controller
         if ($old_attachment && $new_attachment) {
             Storage::disk('public')->delete($old_attachment);
         }
-        
+
         return response()->json([
             'message' => 'Achievement updated successfully'
         ]);
@@ -91,7 +91,7 @@ class AchievementsController extends Controller
         $achievement = Achievement::findOrFail($id);
         $achievement->delete();
         if ($achievement->attachment) {
-                Storage::disk('public')->delete($achievement->attachment);
+            Storage::disk('public')->delete($achievement->attachment);
         }
 
         return response()->json([
@@ -99,7 +99,8 @@ class AchievementsController extends Controller
         ]);
     }
 
-    protected function uploadAttachment(Request $request) {
+    protected function uploadAttachment(Request $request)
+    {
         if (!$request->hasFile('attachment')) {
             return;
         }

@@ -16,7 +16,7 @@ class PlatformsController extends Controller
     public function index(Request $request)
     {
         $platform = Platform::with(['achievements'])->filter($request->query())->get();
-        
+
         return $platform;
     }
 

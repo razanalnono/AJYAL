@@ -1,22 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\Api\LandingPage;
 
 use App\Models\Page;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Faker\Provider\Lorem;
 use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
 
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:sanctum')->except('index');
-    // }
-    
     /**
      * Display a listing of the resource.
      *
@@ -24,8 +17,7 @@ class PageController extends Controller
      */
     public function index()
     {
-        //
-        return Page::select('bio','vision','goals','logo')->get();
+        return Page::select('bio', 'vision', 'goals', 'logo')->get();
     }
 
     /**
@@ -36,34 +28,15 @@ class PageController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'bio'=>'required',
-            'vision'=>'required',
-            'goals'=>'required',
-            'logo'=>'nullable|image',
-        ]);
-
-        //  $logoName=Str::random().'.'.$request->logo->getClientOriginalExtension();
-        // Storage::disk('public')->putFileAs('logo/image',$request->logo,$logoName);
-        // Page::create($request->post());
-
+        $request->validate(Page::rules());
         $data = $request->except('logo');
         $data['logo'] = $this->uploadImage($request);
         $page = Page::create($data);
+
         return response()->json([
-            'message'=>'Added Successfully',
-            'data'=>$page
+            'message' => 'Added Successfully',
+            'data' => $page
         ]);
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -75,17 +48,7 @@ class PageController extends Controller
      */
     public function update(Request $request, Page $page)
     {
-        //
-        $request->validate([
-            'bio' => 'sometimes|required',
-            'vision' => 'sometimes|required',
-            'goals' => 'sometimes|required',
-            'logo' => 'sometimes|nullable',
-        ]);
-
-
-        //$page->update($request->all());
-       // $page = Page::findOrFail($page);
+        $request->validate(Page::rules());
         $old_image = $page->logo;
         $data = $request->except('logo');
         $new_image = $this->uploadImage($request);
@@ -99,7 +62,7 @@ class PageController extends Controller
 
         return response()->json([
             'message' => 'Updated Successfully',
-            'data'=>$page
+            'data' => $page
         ]);
     }
 
@@ -109,18 +72,16 @@ class PageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Page $page)
+    public function destroy($id)
     {
-
-        // if ($page->logo) {
-        //     $isExist = Storage::disk('public')->exists('logo/image' . $page->logo);
-        //     if ($isExist) {
-        //         Storage::disk('public')->delete('logo/image'.$page->logo);
-        //     }
-        // } 
+        $page = Page::findOrFail($id);
         $page->delete();
+        if ($page->logo) {
+            Storage::disk('public')->delete($page->logo);
+        }
+
         return response()->json([
-            'message'=>'Deleted Successfully'
+            'message' => 'Deleted Successfully'
         ]);
     }
 
@@ -136,5 +97,4 @@ class PageController extends Controller
         ]);
         return $path;
     }
-    
 }

@@ -14,34 +14,34 @@ class PresenceAbsence extends Model
 
     public function scopeFilter(Builder $builder, $filters)
     {
-        // $builder->when($filters['date'] ?? false, function ($builder, $value) {
-        //     $builder->whereDate('date', $value);
-        // });
-        // $builder->when($filters['course_id'] ?? false, function ($builder, $value) {
-        //     $builder->where('course_id', $value);
-        // });
-        // $builder->when($filters['trainee_id'] ?? false, function ($builder, $value) {
-        //     $builder->where('trainee_id', $value);
-        // });
-        // $builder->when($filters['status'] ?? false, function ($builder, $value) {
-        //     $builder->where('status', $value);
-        // });
-        // $builder->when($filters['trainee_name'] ?? false, function ($builder, $value) {
-        //     $builder->whereHas('trainee', function ($query) use ($value) {
-        //         $query->where('firstName', 'Like', '%' . $value . '%')
-        //             ->orWhere('lastName', 'Like', '%' . $value . '%');
+        $builder->when($filters['date'] ?? false, function ($builder, $value) {
+            $builder->whereDate('date', $value);
+        });
+        $builder->when($filters['course_id'] ?? false, function ($builder, $value) {
+            $builder->where('course_id', $value);
+        });
+        $builder->when($filters['trainee_id'] ?? false, function ($builder, $value) {
+            $builder->where('trainee_id', $value);
+        });
+        $builder->when($filters['status'] ?? false, function ($builder, $value) {
+            $builder->where('status', $value);
+        });
+        $builder->when($filters['trainee_name'] ?? false, function ($builder, $value) {
+            $builder->whereHas('trainee', function ($query) use ($value) {
+                $query->where('firstName', 'Like', '%' . $value . '%')
+                    ->orWhere('lastName', 'Like', '%' . $value . '%');
+            });
+        });
+        // $builder->when($filters['from_date'] ?? false, function ($builder, $value) {
+        //     $builder->whereHas('course', function ($query) use ($value) {
+        //         $query->whereDate('start_date', '>=', $value)->whereDate('end_date', '<=', $value);
         //     });
         // });
-        $builder->when($filters['from_date'] ?? false, function ($builder, $value) {
-            $builder->whereHas('course', function ($query) use ($value) {
-                $query->whereDate('start_date', '>=', $value)->whereDate('end_date', '<=', $value);
-            });
-        });
-        $builder->when($filters['to_date'] ?? false, function ($builder, $value) {
-            $builder->whereHas('course', function ($query) use ($value) {
-                $query->whereDate('end_date', '<=', $value)->whereDate('start_date', '>=', $value);
-            });
-        });
+        // $builder->when($filters['to_date'] ?? false, function ($builder, $value) {
+        //     $builder->whereHas('course', function ($query) use ($value) {
+        //         $query->whereDate('end_date', '<=', $value)->whereDate('start_date', '>=', $value);
+        //     });
+        // });
     }
     public static function rules($id = 0)
     {

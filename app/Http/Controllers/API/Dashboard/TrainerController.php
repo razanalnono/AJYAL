@@ -17,10 +17,9 @@ class TrainerController extends Controller
     //
     public function index()
     {
+        $trainer = Course::query()->select('name', 'trainer_id')
+            ->with(['trainer:id,firstName,lastName,gender,avatar,email'])->get();
 
-        //
-        $trainer = Course::query()->select('name','trainer_id')
-        ->with(['trainer:id,firstName,lastName,gender,avatar,email'])->get();
         return $trainer;
     }
 
@@ -30,26 +29,16 @@ class TrainerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request,Trainer $trainer)
+    public function store(Request $request, Trainer $trainer)
     {
-
-        //
-
         $email = $request->email;
         $trainer = Trainer::where('email', $email)->first();
-
         $password = Random::generate('5');
-
-        // $hashed = Hash::make($password);
-        // $trainee->password = $hashed;
-
-
         $data = $request->except('avatar');
         $data['password'] = Hash::make($password);
-
         $data['avatar'] = $this->uploadImage($request);
-
         $trainer = Trainer::create($data);
+        
         Mail::to($trainer->email)->send(new Password($password));
 
         return response()->json([
@@ -80,7 +69,7 @@ class TrainerController extends Controller
         //
         $old_image = $trainer->avatar;
         $data = $request->except('avatar');
-        
+
         $password = Random::generate('5');
         $data['password'] = Hash::make($password);
 

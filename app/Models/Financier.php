@@ -27,6 +27,6 @@ class Financier extends Model
 
     public function projects()
     {
-        return $this->belongsToMany(Project::class,'financier_projects', 'project_id', 'financier_id', 'id', 'id')->withDefault();
+        return $this->belongsToMany(Project::class, 'financier_projects', 'project_id', 'financier_id', 'id', 'id')->withDefault();
     }
 }

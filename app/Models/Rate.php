@@ -19,22 +19,12 @@ class Rate extends Model
 
     public function scopeFilter(Builder $builder, $filters)
     {
-        // $builder->when($filters['trainee_name'] ?? false, function ($builder, $value) {
-        //     $builder->where('firstName', 'Like', '%' . $value . '%')
-        //     ->orWhere('lastName', 'Like', '%' . $value . '%');
-        // });
-        // $builder->when($filters['carriagePrice'] ?? false, function ($builder, $value) {
-        //     $builder->where('carriagePrice', $value);
-        // });
         $builder->when($filters['trainee_id'] ?? false, function ($builder, $value) {
             $builder->where('trainee_id', $value);
         });
         $builder->when($filters['course_id'] ?? false, function ($builder, $value) {
             $builder->where('course_id', $value);
         });
-        // $builder->when($filters['status'] ?? false, function ($builder, $value) {
-        //     $builder->where('status', $value);
-        // });
         $builder->when($filters['trainee_name'] ?? false, function ($builder, $value) {
             $builder->whereHas('trainee', function ($query) use ($value) {
                 $query->where('firstName', 'Like', '%' . $value . '%')

@@ -17,7 +17,8 @@ class Achievement extends Model
         'trainee_id',
     ];
 
-    public static function rules($id = 0) {
+    public static function rules($id = 0)
+    {
         return [
             'platform_id' => 'required|integer|exists:platforms,id',
             'other' => 'nullable|string|max:255',

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\Dashboard;
 use App\Models\Trainee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Mail\Password;
@@ -18,7 +17,7 @@ class TraineeController extends Controller
     public function index(Request $request)
     {
         $trainees = Trainee::with(['groups', 'city', 'achievements'])
-        ->filter($request->query())->paginate();
+            ->filter($request->query())->paginate();
 
         return $trainees;
     }
@@ -85,7 +84,7 @@ class TraineeController extends Controller
         }
         $trainee->update($data);
         $trainee->groups()->sync($request->groups);
-        
+
         //Remove old image
         if ($old_image && $new_image) {
             Storage::disk('public')->delete($old_image);
@@ -120,7 +119,7 @@ class TraineeController extends Controller
             return;
         }
         // Uploaded Image
-        $file = $request->file('avatar'); 
+        $file = $request->file('avatar');
         $path = $file->store('uploads', [
             'disk' => 'public'
         ]);

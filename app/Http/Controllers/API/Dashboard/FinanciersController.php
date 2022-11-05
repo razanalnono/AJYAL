@@ -17,7 +17,7 @@ class FinanciersController extends Controller
     public function index()
     {
         $platform = Financier::with('projects')->get();
-        
+
         return $platform;
     }
 
@@ -33,7 +33,7 @@ class FinanciersController extends Controller
 
         $data = $request->except('logo');
         $data['logo'] = $this->uploadlogo($request);
-        $Financier = Financier::create( $data );
+        $Financier = Financier::create($data);
 
         return response()->json([
             'message' => 'Financier added successfully'
@@ -61,7 +61,7 @@ class FinanciersController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate(Financier::rules());
-        
+
         $financier = Financier::findOrFail($id);
         $old_logo = $financier->logo;
         $data = $request->except('logo');
@@ -90,11 +90,12 @@ class FinanciersController extends Controller
         $financier = Financier::findOrFail($id);
         $financier->delete();
         if ($financier->logo) {
-                Storage::disk('public')->delete($financier->logo);
+            Storage::disk('public')->delete($financier->logo);
         }
     }
 
-    protected function uploadlogo(Request $request) {
+    protected function uploadlogo(Request $request)
+    {
         if (!$request->hasFile('logo')) {
             return;
         }

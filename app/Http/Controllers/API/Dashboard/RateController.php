@@ -16,7 +16,7 @@ class RateController extends Controller
     public function index(Request $request)
     {
         $rates = Rate::with(['trainee', 'course'])->filter($request->query())->get();
-        
+
         return $rates;
     }
 

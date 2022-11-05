@@ -16,18 +16,19 @@ class Group extends Model
         'start_date', 'end_date', 'status'
     ];
 
-    public function scopeFilter (Builder $builder, $filters) 
+    public function scopeFilter(Builder $builder, $filters)
     {
 
-        $builder->when($filters['name'] ?? false, function($builder, $value){
+        $builder->when($filters['name'] ?? false, function ($builder, $value) {
             $builder->where('name', 'LIKE', "%{$value}%");
         });
-        $builder->when($filters['status'] ?? false, function($builder, $value){
+        $builder->when($filters['status'] ?? false, function ($builder, $value) {
             $builder->where('status', 'LIKE', $value);
         });
     }
 
-    public static function rules($id = 0) {
+    public static function rules($id = 0)
+    {
         return [
             'name' => ['required', 'string', 'max:255'],
             'project_id' => ['required', 'exists:projects,id'],
@@ -43,17 +44,14 @@ class Group extends Model
     {
         return $this->belongsTo(Project::class, 'project_id', 'id');
     }
-
     public function course()
     {
         return $this->hasMany(Course::class, 'group_id', 'id');
     }
-
     public function trainees()
     {
         return $this->belongsToMany(Trainee::class, 'group_trainee', 'trainee_id', 'group_id', 'id', 'id');
     }
-
     public function achievements()
     {
         return $this->hasMany(Achievement::class, 'trainee_id', 'id');
